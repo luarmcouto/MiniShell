@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+         #
+#    By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/22 15:11:08 by luamonteiro       #+#    #+#              #
-#    Updated: 2025/05/22 15:12:46 by luamonteiro      ###   ########.fr        #
+#    Updated: 2025/05/24 18:12:02 by iwietzke         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
