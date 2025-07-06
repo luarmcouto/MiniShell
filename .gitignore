@@ -1,0 +1,5 @@
+**/*.o
+*.o
+*/*.o
+.DS_Store
+.vscode
