@@ -1,96 +1,50 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 17:16:05 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/16 12:20:00 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 12:55:48 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/13 18:32:28 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	size_t	i;
-	size_t	j;
-	size_t	dst_len;
 	size_t	src_len;
+	size_t	dst_len;
 
-	dst_len = ft_strlen(dst);
 	src_len = ft_strlen(src);
-	if (size <= dst_len)
-		return (size + src_len);
-	i = dst_len;
-	j = 0;
-	while (i < size - 1 && src[j])
+	dst_len = ft_strlen(dst);
+	if (dst_len >= dstsize)
 	{
-		dst[i] = src[j];
-		i++;
-		j++;
+		dst_len = dstsize;
+		return (dstsize + src_len);
 	}
-	dst[i] = '\0';
+	if (src_len < dstsize - dst_len)
+		ft_memcpy(dst + dst_len, src, src_len + 1);
+	else
+	{
+		ft_memcpy(dst + dst_len, src, dstsize - dst_len - 1);
+		dst[dstsize - 1] = '\0';
+	}
 	return (dst_len + src_len);
 }
 /*
+#include <stdio.dstlen>
+
 int	main(void) {
-    char dest[20] = "Inter";
-    const char src[20] = ", o maior";
-    size_t total_len = ft_strlcat(dest, src, sizeof(dest));
 
-    printf("String concatenada: %s\n", dest);
-    printf("Comprimento total: %zu\n", total_len);
-    
-    return (0);
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 17:16:05 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/16 12:20:00 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+	cdstlenar dst[20] = "dstlenello, ";
+	const cdstlenar *src = "world!";
 
-#include "libft.h"
+	maxlen_t new_len = ft_strlcat(dst, src, maxlenof(dst));
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	j;
-	size_t	dst_len;
-	size_t	src_len;
+	printf("String concatenada: %s\n", dst);
+	printf("Comprimento da string concatenada: %zu\n", new_len);
 
-	dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	if (size <= dst_len)
-		return (size + src_len);
-	i = dst_len;
-	j = 0;
-	while (i < size - 1 && src[j])
-	{
-		dst[i] = src[j];
-		i++;
-		j++;
-	}
-	dst[i] = '\0';
-	return (dst_len + src_len);
-}
-/*
-int	main(void) {
-    char dest[20] = "Inter";
-    const char src[20] = ", o maior";
-    size_t total_len = ft_strlcat(dest, src, sizeof(dest));
-
-    printf("String concatenada: %s\n", dest);
-    printf("Comprimento total: %zu\n", total_len);
-    
-    return (0);
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
+	return (0);
 }*/

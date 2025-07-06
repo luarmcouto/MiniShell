@@ -1,13 +1,12 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 13:39:43 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/10 15:08:18 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/24 19:09:28 by luarodri          #+#    #+#             */
+/*   Updated: 2024/05/24 19:33:10 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +14,14 @@
 
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	t_list	*current;
 	t_list	*tmp;
 
-	if (NULL == lst || NULL == del)
-		return ;
-	current = *lst;
-	while (current)
+	while (*lst)
 	{
-		tmp = current;
-		current = current->next;
-		ft_lstdelone(tmp, del);
+		tmp = (*lst)->next;
+		ft_lstdelone(*lst, del);
+		*lst = tmp;
 	}
+	free(*lst);
 	*lst = NULL;
 }
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 13:39:43 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/10 15:08:18 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-void	ft_lstclear(t_list **lst, void (*del)(void *))
-{
-	t_list	*current;
-	t_list	*tmp;
-
-	if (NULL == lst || NULL == del)
-		return ;
-	current = *lst;
-	while (current)
-	{
-		tmp = current;
-		current = current->next;
-		ft_lstdelone(tmp, del);
-	}
-	*lst = NULL;
-}
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c

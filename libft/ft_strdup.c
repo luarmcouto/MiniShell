@@ -1,13 +1,12 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 17:30:22 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/16 12:10:57 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 22:12:00 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/20 10:41:42 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,68 +14,18 @@
 
 char	*ft_strdup(const char *s)
 {
-	char	*new_string;
-	int		i;
+	char	*str;
+	size_t	i;
 
-	i = 0;
-	new_string = (char *)malloc(sizeof(char) * ft_strlen(s) + 1);
-	if ((!new_string))
+	str = (char *)malloc(sizeof(char) * (ft_strlen((char *)s) + 1));
+	if (!str)
 		return (NULL);
-	while (*s)
-	{
-		new_string[i++] = *s++;
-	}
-	new_string[i] = '\0';
-	return (new_string);
-}
-/*
-int	main(void)
-{
-    char array1[] = "Vamos inter";
-    char *ptr;
-    printf("A string no array1 e: %s\n", array1);
-    ptr = ft_strdup(array1);
-    printf("A string duplicada: e %s\n", ptr);
-    return (0);
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 17:30:22 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/16 12:10:57 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-char	*ft_strdup(const char *s)
-{
-	char	*new_string;
-	int		i;
-
 	i = 0;
-	new_string = (char *)malloc(sizeof(char) * ft_strlen(s) + 1);
-	if ((!new_string))
-		return (NULL);
-	while (*s)
+	while (s[i])
 	{
-		new_string[i++] = *s++;
+		str[i] = s[i];
+		i++;
 	}
-	new_string[i] = '\0';
-	return (new_string);
+	str[i] = '\0';
+	return (str);
 }
-/*
-int	main(void)
-{
-    char array1[] = "Vamos inter";
-    char *ptr;
-    printf("A string no array1 e: %s\n", array1);
-    ptr = ft_strdup(array1);
-    printf("A string duplicada: e %s\n", ptr);
-    return (0);
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
-}*/

@@ -1,13 +1,12 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:47:28 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 22:47:51 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 16:57:21 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/20 16:41:08 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,50 +14,7 @@
 
 int	ft_toupper(int c)
 {
-	if (c > 96 && c < 123)
-		c -= 32;
+	if (c >= 97 && c <= 122)
+		return (c - 32);
 	return (c);
 }
-/*
-int main(void) {
-    char c;
-
-    c = 'a';
-    printf("%c -> %c", c, toupper(c));
-
-    c = 'a';
-    printf("\n%c -> %c\n", c, ft_toupper(c));
-    return (0);
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_toupper.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:47:28 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 22:47:51 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-int	ft_toupper(int c)
-{
-	if (c > 96 && c < 123)
-		c -= 32;
-	return (c);
-}
-/*
-int main(void) {
-    char c;
-
-    c = 'a';
-    printf("%c -> %c", c, toupper(c));
-
-    c = 'a';
-    printf("\n%c -> %c\n", c, ft_toupper(c));
-    return (0);
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
-}*/

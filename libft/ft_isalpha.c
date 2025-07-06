@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:40:58 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 17:40:03 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 12:54:38 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/11 18:56:40 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,17 @@
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+	if ((c >= 97 && c <= 122) || (c >= 65 && c <= 90))
 		return (1);
-	else
-		return (0);
+	return (0);
 }
 /*
-int main(void) {
-	printf("%d\n", ft_isalpha('a'));
-	printf("%d\n", isalpha('a'));
-	return 0;
-}*/
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:40:58 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 17:40:03 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+int	main(void) {
+	char c;
 
-#include "libft.h"
+	printf("Digite um caractere: ");
+	scanf("%c", &c);
 
-int	ft_isalpha(int c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	else
-		return (0);
-}
-/*
-int main(void) {
-	printf("%d\n", ft_isalpha('a'));
-	printf("%d\n", isalpha('a'));
-	return 0;
+	printf("%d", ft_isalpha(c));
+	return (0);
 }*/

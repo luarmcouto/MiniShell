@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/01 14:54:55 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/17 00:27:22 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 20:24:41 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/13 20:09:23 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,85 +14,26 @@
 
 int	ft_atoi(const char *str)
 {
-	int	i;
 	int	sign;
-	int	res;
+	int	result;
 
-	i = 0;
 	sign = 1;
-	res = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+	result = 0;
+	while ((*str == 32) || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == 43 || *str == 45)
 	{
-		i++;
-	}
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-		{
+		if (*str == 45)
 			sign *= -1;
-		}
-		i++;
+		str++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	if (*str > 47)
 	{
-		res = res * 10 + str[i] - 48;
-		i++;
-	}
-	return (res * sign);
-}
-/*
-int	main()
-{
-	char *str = "-42763264";
-
-	printf("Nmr: %d\n", ft_atoi(str));
-}*/
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/01 14:54:55 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/17 00:27:22 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-int	ft_atoi(const char *str)
-{
-	int	i;
-	int	sign;
-	int	res;
-
-	i = 0;
-	sign = 1;
-	res = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-	{
-		i++;
-	}
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
+		while ((*str >= 48) && (*str <= 57))
 		{
-			sign *= -1;
+			result = (result * 10) + (*str - 48);
+			str++;
 		}
-		i++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		res = res * 10 + str[i] - 48;
-		i++;
-	}
-	return (res * sign);
+	return (sign * result);
 }
-/*
-int	main()
-{
-	char *str = "-42763264";
-
-	printf("Nmr: %d\n", ft_atoi(str));
-}*/

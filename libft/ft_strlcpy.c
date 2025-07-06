@@ -1,88 +1,45 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 16:17:48 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/20 21:21:59 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 12:56:19 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/20 11:19:31 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	ft_strlcpy(char *dest, const char *src, size_t sizedest)
 {
-	size_t	len;
+	size_t	sizesrc;
 	size_t	i;
 
-	len = ft_strlen(src);
-	if (size == 0)
-		return (len);
+	sizesrc = ft_strlen(src);
 	i = 0;
-	while (src[i] != '\0' && i < size - 1)
+	if (sizedest)
 	{
-		dst[i] = src[i];
-		i++;
+		while (src[i] != 0 && i < (sizedest - 1))
+		{
+			dest[i] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
 	}
-	if (size > 0)
-		dst[i] = '\0';
-	return (len);
+	return (sizesrc);
 }
 /*
-int	main(void)
-{
-	char src[15] = "O maior";
-    char dest[15] = "Internacional";
-    size_t size = 20;
+int	main(void) {
+	char dest[20];
+	const char *src = "Hello, world!";
 
-    printf("Antes:%s\n", dest);
-    printf("%zu\n", ft_strlcpy(dest, src, size)); 
-    printf("Depois:%s\n", dest);
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 16:17:48 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/20 21:21:59 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+	// Copia a string "Hello, world!" para dest usando ft_strlcpy
+	size_t len = ft_strlcpy(dest, src, sizeof(dest));
 
-#include "libft.h"
+	printf("String copiada: %s\n", dest);
+	printf("Comprimento da string copiada: %zu\n", len);
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	len;
-	size_t	i;
-
-	len = ft_strlen(src);
-	if (size == 0)
-		return (len);
-	i = 0;
-	while (src[i] != '\0' && i < size - 1)
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	if (size > 0)
-		dst[i] = '\0';
-	return (len);
-}
-/*
-int	main(void)
-{
-	char src[15] = "O maior";
-    char dest[15] = "Internacional";
-    size_t size = 20;
-
-    printf("Antes:%s\n", dest);
-    printf("%zu\n", ft_strlcpy(dest, src, size)); 
-    printf("Depois:%s\n", dest);
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
+	return (0);
 }*/

@@ -1,13 +1,12 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:48:37 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 22:48:50 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 17:21:40 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/10 17:26:07 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,50 +14,7 @@
 
 int	ft_tolower(int c)
 {
-	if (c > 64 && c < 91)
-		c += 32;
+	if (c >= 65 && c <= 90)
+		return (c + 32);
 	return (c);
 }
-/*
-int main(void) {
-    char c;
-
-    c = 'A';
-    printf("%c -> %c", c, tolower(c));
-
-    c = 'B';
-    printf("\n%c -> %c\n", c, ft_tolower(c));
-    return (0);
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_tolower.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:48:37 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 22:48:50 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-int	ft_tolower(int c)
-{
-	if (c > 64 && c < 91)
-		c += 32;
-	return (c);
-}
-/*
-int main(void) {
-    char c;
-
-    c = 'A';
-    printf("%c -> %c", c, tolower(c));
-
-    c = 'B';
-    printf("\n%c -> %c\n", c, ft_tolower(c));
-    return (0);
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
-}*/

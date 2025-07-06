@@ -1,76 +1,32 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 19:03:05 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 23:14:27 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 20:05:58 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/10 20:16:05 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int	ft_strncmp(const char *s1, const char *s2, unsigned int n)
 {
-	unsigned int	i;
+	unsigned char	*ps1;
+	unsigned char	*ps2;
 
-	i = 0;
+	ps1 = (unsigned char *)s1;
+	ps2 = (unsigned char *)s2;
+	while (*ps1 && *ps1 == *ps2 && n > 0)
+	{
+		ps1++;
+		ps2++;
+		n--;
+	}
 	if (n == 0)
 		return (0);
-	while ((s1[i] != '\0' || s2[i] != '\0') && i < n)
-	{
-		if (s1[i] != s2[i])
-			return (*(unsigned char *)(s1 + i) - *(unsigned char *)(s2 + i));
-		i++;
-	}
-	return (0);
+	else
+		return (*ps1 - *ps2);
 }
-/*
-int	main(void)
-{
-	char a[] = "IgorMates";
-	char b[] = "IgorAates";
-	printf("Funcao criada: %d\n", ft_strncmp(a, b, 5));
-	printf("Funcao original: %d\n", strncmp(a, b, 5));
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 19:03:05 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 23:14:27 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	unsigned int	i;
-
-	i = 0;
-	if (n == 0)
-		return (0);
-	while ((s1[i] != '\0' || s2[i] != '\0') && i < n)
-	{
-		if (s1[i] != s2[i])
-			return (*(unsigned char *)(s1 + i) - *(unsigned char *)(s2 + i));
-		i++;
-	}
-	return (0);
-}
-/*
-int	main(void)
-{
-	char a[] = "IgorMates";
-	char b[] = "IgorAates";
-	printf("Funcao criada: %d\n", ft_strncmp(a, b, 5));
-	printf("Funcao original: %d\n", strncmp(a, b, 5));
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
-}*/

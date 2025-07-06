@@ -1,13 +1,12 @@
-<<<<<<< HEAD
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 12:57:07 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/16 13:48:12 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 22:49:54 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/10 22:50:17 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,100 +14,18 @@
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	unsigned int	i;
-	char			*str;
+	char	*check;
+	size_t	i;
 
-	if (!s)
-		return (NULL);
-	str = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (str == NULL)
+	check = (char *)malloc(sizeof(char) * (ft_strlen((char *)s) + 1));
+	if (!s || !check)
 		return (NULL);
 	i = 0;
-	while (s[i])
+	while (s[i] != 0)
 	{
-		str[i] = f(i, s[i]);
+		check[i] = (*f)(i, s[i]);
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	check[i] = '\0';
+	return (check);
 }
-/*
-char	uppercase(unsigned int index, char c)
-{
-    if (c >= 'a' && c <= 'z') {
-        return (c - 32);
-    } else {
-        return (c);
-    }
-}
-int	main(void)
-{
-    char original[] = "inter, gigante!";
-    char *modified;
-
-    modified = ft_strmapi(original, uppercase);
-
-    printf("Original: %s\n", original);
-    printf("Modified: %s\n", modified);
-
-    free(modified);
-
-    return (0);
-=======
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strmapi.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 12:57:07 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/16 13:48:12 by iwietzke         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "libft.h"
-
-char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
-{
-	unsigned int	i;
-	char			*str;
-
-	if (!s)
-		return (NULL);
-	str = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (str == NULL)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		str[i] = f(i, s[i]);
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-/*
-char	uppercase(unsigned int index, char c)
-{
-    if (c >= 'a' && c <= 'z') {
-        return (c - 32);
-    } else {
-        return (c);
-    }
-}
-int	main(void)
-{
-    char original[] = "inter, gigante!";
-    char *modified;
-
-    modified = ft_strmapi(original, uppercase);
-
-    printf("Original: %s\n", original);
-    printf("Modified: %s\n", modified);
-
-    free(modified);
-
-    return (0);
->>>>>>> c63af1abf17cf435a917ebe29bbfbcd78256867c
-}*/
