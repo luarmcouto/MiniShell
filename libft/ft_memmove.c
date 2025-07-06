@@ -3,46 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 18:14:34 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/20 20:52:25 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 15:00:02 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/13 18:12:24 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	char	*dest_ptr;
-	char	*src_ptr;
+	char	*c_src;
+	char	*c_dst;
 
-	dest_ptr = (char *)dest;
-	src_ptr = (char *)src;
-	if (!dest && !src)
+	if (!dst && !src)
 		return (NULL);
-	if (!n || dest == src)
-		return (dest);
-	if (dest < src)
-		ft_memcpy(dest_ptr, src_ptr, n);
-	else if (dest > src)
+	c_src = (char *)src;
+	c_dst = (char *)dst;
+	if (c_dst > c_src)
+		while (len--)
+			c_dst[len] = c_src[len];
+	else
 	{
-		while (n > 0)
-		{
-			dest_ptr[n - 1] = src_ptr[n - 1];
-			n--;
-		}
+		while (len--)
+			*c_dst++ = *c_src++;
 	}
-	return (dest_ptr);
+	return (dst);
 }
-/*
-int main () {
-   char dest[] = "oldstring";
-   const char src[]  = "novastring";
-
-   printf("Antes da memmove src = %s, dest = %s\n", src, dest);
-   ft_memmove(dest, src, 3);
-   printf("Depois mem.move src = %s, dest = %s\n", src, dest);
-
-   return(0);
-}*/

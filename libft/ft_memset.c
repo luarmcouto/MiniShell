@@ -3,40 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 14:39:43 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 18:31:42 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 12:55:35 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/11 19:30:13 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
-void	*ft_memset(void *s, int c, size_t n)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	unsigned char	*ptr;
+	unsigned char	*tmp_ptr;
 
-	ptr = (unsigned char *)s;
-	while (n > 0)
-	{
-		*ptr = (unsigned char)c;
-		ptr++;
-		n--;
-	}
-	return (s);
+	tmp_ptr = (unsigned char *) b;
+	while (len--)
+		*(tmp_ptr++) = (unsigned char)c;
+	return (b);
 }
 /*
-int	main(void)
-{
-    char str[20];
-    ft_memset(str, 'A', 10);
-    ft_memset(str + 10, 'C', 10);
-    printf("%s\n", str);
+int	main(void) {
+	char str[50] = "Hello, world!";
+	printf("Antes do ft_memset: %s\n", str);
 
-	//Funcao original
-	char str1[20];
-    memset(str1, 'A', 10);
-    memset(str1 + 10, 'C', 10);
-    printf("%s\n", str1);
-    return (0);
+	ft_memset(str, 'X', 5);
+
+	printf("Depois do ft_memset: %s\n", str);
+
+	return (0);
 }*/

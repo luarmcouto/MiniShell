@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/26 18:14:59 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/22 23:10:38 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 19:47:49 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/17 20:53:29 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,16 @@
 
 char	*ft_strrchr(const char *s, int c)
 {
-	const char	*last_occurrence;
+	char	*last;
 
-	last_occurrence = NULL;
-	while (*s != '\0')
+	last = NULL;
+	while (*s)
 	{
 		if (*s == (char)c)
-			last_occurrence = s;
+			last = (char *)s;
 		s++;
 	}
 	if (*s == (char)c)
-		return ((char *)s);
-	else
-		return ((char *)last_occurrence);
+		last = (char *)s;
+	return (last);
 }
-/*
-int	main(void)
-{
-    const char *str = "alguma,coisa,com,virgula";
-
-    char *to_find = ft_strrchr(str, ',');
-
-    if (to_find != NULL)
-    {
-        printf("%s\n", to_find);
-    }
-    else
-    {
-        printf("Caractere não encontrado na string.\n");
-    }
-    return (0);
-}*/

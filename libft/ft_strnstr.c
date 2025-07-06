@@ -3,48 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/01 15:39:52 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/20 22:32:29 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 20:22:37 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/10 20:23:12 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strnstr(const char *big, const char *little, size_t len)
+char	*ft_strnstr(const char *str, const char *to_find, size_t len)
 {
 	size_t	i;
-	size_t	j;
+	size_t	c;
 
 	i = 0;
-	j = 0;
-	if (little[j] == '\0')
-		return ((char *)big);
-	while (big[i] != '\0' && i < len)
+	if (ft_strlen(to_find) == 0)
+		return ((char *)&str[i]);
+	while (str[i] != 0)
 	{
-		if (big[i] == little[j])
+		c = 0;
+		while (str[i + c] == to_find[c] && (i + c) < len)
 		{
-			while (big[i + j] == little[j] && i + j < len)
-			{
-				if (little[j + 1] == '\0')
-					return ((char *)big + i);
-				j++;
-			}
-			j = 0;
+			if (str[i + c] == 0 && to_find[c] == 0)
+				return ((char *)&str[i]);
+			c++;
 		}
+		if (to_find[c] == 0)
+			return ((char *)str + i);
 		i++;
 	}
-	return (NULL);
-}
-/*
-int main ()
-{
-    char str_src[]	= "Internacional";
-	char str_find[]	= "nacio";
-
-	printf("Source: %s \n", str_src);
-	printf("Vai procurar: %s \n",  str_find);
-	printf("Achou: %s \n", ft_strnstr(str_src, str_find, sizeof(str_src)));
 	return (0);
-}*/
+}

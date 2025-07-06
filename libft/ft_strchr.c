@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/25 19:08:43 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 22:55:33 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 17:29:09 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/13 19:03:26 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,18 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != '\0')
+	size_t	i;
+	char	cc;
+
+	cc = (char)c;
+	i = 0;
+	while (s[i])
 	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
+		if (s[i] == cc)
+			return ((char *)&s[i]);
+		i++;
 	}
-	if (*s == (char)c)
-		return ((char *)s);
+	if (s[i] == cc)
+		return ((char *)&s[i]);
 	return (NULL);
 }
-/*
-int	main(void)
-{
-    const char *str = "Essa e Minha string!";
-    char *to_find = ft_strchr(str, 'M');
-
-    printf("Encontrou: %s\n", to_find);
-
-    char *no_find = ft_strchr(str, 'Z');
-
-    if (no_find == NULL)
-    {
-        printf("Caracter Z nao encontrado\n");
-    }
-}*/

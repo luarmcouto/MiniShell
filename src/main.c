@@ -3,58 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 15:07:58 by luamonteiro       #+#    #+#             */
-/*   Updated: 2025/06/30 16:53:53 by luamonteiro      ###   ########.fr       */
+/*   Updated: 2025/06/29 19:19:27 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    Getwd(char *buf)
+// Variável global para sinais (única permitida)
+int	g_signal_received = 0;
+
+int	main(int argc, char **argv, char **envp)
 {
-    if (NULL == getwd(buf))
-        perror("getwd failed");
-}
-char    *input_read_line(void)
-{
-    char    *buf;
-    char    cwd[BUFSIZ];
-    size_t  buffsize;
+	char	*input;
+	t_cmd	*cmd;
 
-    buf = NULL;
+	(void)argc;
+	(void)argv;
 
-    Getwd(cwd);
-    printf("🐚  %s  🐚 $>", cwd);
-    
-    if (getline(&buf, &buffsize, stdin) == -1)
-    {
-        buf = NULL;
+	printf("=== MINISHELL - TESTE DO EXECUTOR ===\n");
+	printf("Comandos disponíveis para teste:\n");
+	printf("- Built-ins: echo, cd, pwd, env, exit\n");
+	printf("- Externos: ls, cat, grep, etc.\n");
+	printf("- Digite 'exit' para sair\n\n");
 
-        if (feof(stdin))
-            printf("[EOF]");
-        else
-            printf("getline failed");
+	while (1)
+	{
+		input = readline("minishell> ");
+		if (!input) // Ctrl+D
+		{
+			printf("exit\n");
+			break;
+		}
 
-        printf("%s inputfunction ON \n", buf);
-    }
-    printf("end function");
-    return (buf);
-}
+		if (*input)
+			add_history(input);
 
-int main(int argc, char *argv[], char *envp[])
-{
-    (void)argc;
-    (void)argv;
-    (void)envp;
-    char    *line;
+		// Pula linhas vazias
+		if (!*input)
+		{
+			free(input);
+			continue;
+		}
 
-    while ((line = input_read_line()))
-    {
-        printf("%s \n", line);
-        pause();
-    }
+		// Cria comando de teste (será substituído pelo parser)
+		cmd = create_test_cmd(input);
+		if (cmd)
+		{
+			// Executa o comando
+			execute_commands(cmd, envp);
+			
+			// Libera memória
+			free_cmds(cmd);
+		}
+		else
+		{
+			printf("Erro ao processar comando\n");
+		}
 
-    return (0);
+		free(input);
+	}
+
+	printf("Encerrando o minishell...\n");
+	return (0);
 }

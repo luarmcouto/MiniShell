@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 23:43:37 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/15 17:47:43 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 12:52:41 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/11 18:57:01 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,16 @@
 
 int	ft_isdigit(int c)
 {
-	if (c >= '0' && c <= '9')
+	if (c >= 48 && c <= 57)
 		return (1);
-	else
-		return (0);
+	return (0);
 }
 /*
-int main(void) {
-	printf("%d\n", ft_isdigit('1'));
-	printf("%d\n", isdigit('1'));
+int	main(void) {
+	char c;
+	printf("Digite um caractere: ");
+	scanf("%c", &c);
+
+	printf("%d\n", ft_isdigit(c));
+	return (0);
 }*/

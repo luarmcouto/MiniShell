@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luamonteiro <luamonteiro@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/03 21:41:38 by iwietzke          #+#    #+#             */
-/*   Updated: 2024/05/20 23:04:02 by iwietzke         ###   ########.fr       */
+/*   Created: 2024/05/10 22:43:18 by luamonteiro       #+#    #+#             */
+/*   Updated: 2024/05/20 10:50:58 by luamonteiro      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,27 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*str;
-	size_t	len;
+	char	*cat;
+	size_t	i;
+	size_t	h;
 
-	if (!s1 || !s2)
+	cat = malloc(sizeof (char) * ((ft_strlen((char *)s1) + ft_strlen((char *)s2)
+					) + 1));
+	if (!cat)
 		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	str = (char *)malloc(len + 1);
-	if (!str)
-		return (NULL);
-	ft_strlcpy(str, s1, len + 1);
-	ft_strlcat(str, s2, len + 1);
-	return (str);
+	i = 0;
+	while (s1[i] != 0)
+	{
+		cat[i] = s1[i];
+		i++;
+	}
+	h = 0;
+	while (s2[h] != 0)
+	{
+		cat[i] = s2[h];
+		h++;
+		i++;
+	}
+	cat[i] = '\0';
+	return (cat);
 }
-/*
-int	main(void)
-{
-	char str1[] = "Inter";
-	char str2[] = ", maior do mundo!";
-
-	char *join = ft_strjoin(str1, str2);
-
-	if (join != NULL)
-    {
-        printf("Resultado: %s\n", join);
-        free(join);
-    }
-    else
-        printf("Erro: inválido.\n");
-
-    return (0);
-}*/
