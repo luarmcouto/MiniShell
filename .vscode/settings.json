@@ -3,6 +3,9 @@
         "unistd.h": "c",
         "libft.h": "c",
         "readline.h": "c",
-        "stdio.h": "c"
-    }
+        "stdio.h": "c",
+        "stat.h": "c",
+        "minishell.h": "c"
+    },
+    "makefile.configureOnOpen": false
 }

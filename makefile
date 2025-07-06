@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/05/22 15:11:08 by luamonteiro       #+#    #+#              #
-#    Updated: 2025/05/24 18:12:02 by iwietzke         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 # Program name
 NAME		= minishell
 
@@ -25,8 +13,21 @@ CFLAGS		= -Wall -Wextra -Werror -g
 INCLUDES	= -I$(INC_DIR) -I$(LIBFT_DIR)
 LIBS		= -L$(LIBFT_DIR) -lft -lreadline
 
-# Source files
-SRCS		= $(SRC_DIR)/main.c
+# Source files organized by modules
+MAIN_SRCS	= $(SRC_DIR)/main.c
+
+EXEC_SRCS	= $(SRC_DIR)/execution/execution.c
+
+BUILTIN_SRCS = $(SRC_DIR)/builtins/builtins.c
+
+UTILS_SRCS	= $(SRC_DIR)/utils/utils.c \
+			  $(SRC_DIR)/utils/test_utils.c
+
+# Combine all source files
+SRCS		= $(MAIN_SRCS) \
+			  $(EXEC_SRCS) \
+			  $(BUILTIN_SRCS) \
+			  $(UTILS_SRCS)
 
 # Object files
 OBJS		= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -79,7 +80,13 @@ test: $(NAME)
 debug: CFLAGS += -g -fsanitize=address
 debug: re
 
+# Show structure (useful for debugging)
+show:
+	@echo "$(BLUE)Project structure:$(NC)"
+	@echo "Sources: $(SRCS)"
+	@echo "Objects: $(OBJS)"
+
 # Bonus rule (for later)
 bonus: all
 
-.PHONY: all clean fclean re test debug bonus
+.PHONY: all clean fclean re test debug show bonus
