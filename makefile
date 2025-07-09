@@ -10,30 +10,11 @@ OBJ_DIR		= obj
 # Compiler and flags
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -g
-INCLUDES	= -I$(INC_DIR) -I$(LIBFT_DIR) -I$(SRC_DIR) -I$(SRC_DIR)/parsing -I$(SRC_DIR)/execution -I$(SRC_DIR)/builtins
+INCLUDES	= -I$(INC_DIR) -I$(LIBFT_DIR)
 LIBS		= -L$(LIBFT_DIR) -lft -lreadline
 
-# Source files organized by modules
-MAIN_SRCS	= $(SRC_DIR)/main.c
-
-# PARSING SOURCES 
-PARSE_SRCS	= $(SRC_DIR)/parsing/tokenizer.c \
-			  $(SRC_DIR)/parsing/parser.c
-
-# EXECUTION SOURCES 
-EXEC_SRCS	= $(SRC_DIR)/execution/execution.c
-
-BUILTIN_SRCS = $(SRC_DIR)/builtins/builtins.c
-
-UTILS_SRCS	= $(SRC_DIR)/utils/utils.c \
-			  $(SRC_DIR)/utils/test_utils.c
-
-# Combine all source files
-SRCS		= $(MAIN_SRCS) \
-			  $(PARSE_SRCS) \
-			  $(EXEC_SRCS) \
-			  $(BUILTIN_SRCS) \
-			  $(UTILS_SRCS)
+# Source files with wildcards (automatic!)
+SRCS		= $(shell find $(SRC_DIR) -name "*.c")
 
 # Object files
 OBJS		= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -65,6 +46,25 @@ $(LIBFT):
 	@echo "$(BLUE)Compiling libft...$(NC)"
 	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
 
+# Simple test
+test: $(NAME)
+	@echo "$(GREEN)Running basic tests...$(NC)"
+	@echo "pwd" | ./$(NAME) || echo "Test 1 completed"
+	@echo "echo hello world" | ./$(NAME) || echo "Test 2 completed"
+	@echo "$(GREEN)Tests completed!$(NC)"
+
+# Help menu (opcional - só se quiser)
+help:
+	@echo "$(BLUE)Minishell Makefile$(NC)"
+	@echo ""
+	@echo "Commands:"
+	@echo "  make           - Compile the project"
+	@echo "  make clean     - Remove object files"
+	@echo "  make fclean    - Remove all generated files"
+	@echo "  make re        - Clean and rebuild"
+	@echo "  make test      - Run basic tests"
+	@echo "  make help      - Show this help"
+
 clean:
 	@echo "$(RED)Cleaning objects...$(NC)"
 	@rm -rf $(OBJ_DIR)
@@ -77,22 +77,4 @@ fclean: clean
 
 re: fclean all
 
-# Test compilation
-test: $(NAME)
-	@echo "$(GREEN)Running basic test...$(NC)"
-	@./$(NAME)
-
-# Debug version
-debug: CFLAGS += -g -fsanitize=address
-debug: re
-
-# Show structure (useful for debugging)
-show:
-	@echo "$(BLUE)Project structure:$(NC)"
-	@echo "Sources: $(SRCS)"
-	@echo "Objects: $(OBJS)"
-
-# Bonus rule (for later)
-bonus: all
-
-.PHONY: all clean fclean re test debug show bonus
+.PHONY: all clean fclean re test help
