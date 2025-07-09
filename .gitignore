@@ -2,5 +2,6 @@
 *.o
 */*.o
 .vscode
+libft.a
 .DS_Store
 minishell
