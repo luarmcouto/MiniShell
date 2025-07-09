@@ -19,7 +19,27 @@
 /* Libft */
 # include "../libft/libft.h"
 
-/* Structs */
+/* Token types for parsing */
+typedef enum e_token_type
+{
+	TOKEN_WORD,			// comando, argumento, palavra normal
+	TOKEN_PIPE,			// |
+	TOKEN_REDIRECT_IN,	// <
+	TOKEN_REDIRECT_OUT,	// >
+	TOKEN_APPEND,		// >>
+	TOKEN_HEREDOC,		// <<
+	TOKEN_EOF			// fim da linha
+} t_token_type;
+
+/* Token structure */
+typedef struct s_token
+{
+	char			*value;		// conteúdo do token
+	t_token_type	type;		// tipo do token
+	struct s_token	*next;		// próximo token
+} t_token;
+
+/* Command structure */
 typedef struct s_cmd
 {
 	char			**args;      // ex: {"ls", "-l", NULL}
@@ -32,7 +52,14 @@ typedef struct s_cmd
 /* Global variables (only one allowed) */
 extern int	g_signal_received;
 
-/* Execution */
+/* Parsing functions */
+t_token	*tokenize(char *input);
+void	free_tokens(t_token *tokens);
+void	print_tokens(t_token *tokens);
+t_cmd	*parse_tokens(t_token *tokens);
+t_cmd	*parse_input(char *input);
+int		validate_syntax(t_token *tokens);
+
 void	execute_commands(t_cmd *cmds, char **envp);
 
 /* Built-ins */

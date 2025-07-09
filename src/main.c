@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/22 15:07:58 by luamonteiro       #+#    #+#             */
-/*   Updated: 2025/06/29 19:19:27 by iwietzke         ###   ########.fr       */
+/*   Created: 2025/05/22 15:07:58 by luarodri          #+#    #+#             */
+/*   Updated: 2025/07/07 13:44:10 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 
-	printf("=== MINISHELL - TESTE DO EXECUTOR ===\n");
-	printf("Comandos disponíveis para teste:\n");
+	printf("=== MINISHELL - WEEK 1 - TOKENIZER + PARSER ===\n");
+	printf("Funcionalidades implementadas:\n");
+	printf("- Tokenização básica\n");
+	printf("- Parsing de comandos simples\n");
+	printf("- Validação sintática básica\n");
 	printf("- Built-ins: echo, cd, pwd, env, exit\n");
-	printf("- Externos: ls, cat, grep, etc.\n");
+	printf("- Comandos externos básicos\n");
 	printf("- Digite 'exit' para sair\n\n");
 
 	while (1)
@@ -48,8 +51,8 @@ int	main(int argc, char **argv, char **envp)
 			continue;
 		}
 
-		// Cria comando de teste (será substituído pelo parser)
-		cmd = create_test_cmd(input);
+		// USA O NOVO PARSER ao invés da função temporária
+		cmd = parse_input(input);
 		if (cmd)
 		{
 			// Executa o comando
