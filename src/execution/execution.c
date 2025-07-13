@@ -4,22 +4,34 @@ static int	execute_single_cmd(t_cmd *cmd, char **envp)
 {
 	pid_t	pid;
 	int		status;
+	int		result;
+
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (EXIT_FAILURE);
 
 	// Se for built-in, executa diretamente
 	if (is_builtin(cmd->args[0]))
-		return (execute_builtin(cmd));
+	{
+		// Aplica redirecionamentos para built-ins também
+		if (apply_redirections(cmd) == -1)
+			return (EXIT_FAILURE);
+		
+		result = execute_builtin(cmd);
+		g_last_exit_status = result;
+		return (result);
+	}
 
 	// Fork para executar comando externo
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
-		return (1);
-	}
+		return (handle_fork_error());
 	else if (pid == 0)
 	{
 		// Processo filho
-		// TODO: Aplicar redirecionamentos aqui
+		
+		// Aplica redirecionamentos
+		if (apply_redirections(cmd) == -1)
+			exit(EXIT_FAILURE);
 		
 		// Se não temos path, tenta encontrar
 		if (!cmd->path)
@@ -27,24 +39,29 @@ static int	execute_single_cmd(t_cmd *cmd, char **envp)
 		
 		if (!cmd->path)
 		{
-			printf("minishell: %s: command not found\n", cmd->args[0]);
-			exit(127);
+			handle_exec_error(cmd->args[0], ENOENT);
+			exit(EXIT_NOT_FOUND);
 		}
 		
+		// Verifica se o comando é válido e executável
+		result = check_command_access(cmd->path);
+		if (result != EXIT_SUCCESS)
+			exit(result);
+		
 		// Executa o comando
-		if (execve(cmd->path, cmd->args, envp) == -1)
-		{
-			perror("execve");
-			exit(126);
-		}
+		execve(cmd->path, cmd->args, envp);
+		
+		// Se chegou aqui, execve falhou
+		handle_exec_error(cmd->path, errno);
+		exit(EXIT_EXEC_FAIL);
 	}
 	else
 	{
 		// Processo pai - espera o filho
 		waitpid(pid, &status, 0);
-		return (WEXITSTATUS(status));
+		update_exit_status(status);
+		return (g_last_exit_status);
 	}
-	return (0);
 }
 
 static int	execute_pipeline(t_cmd *cmds, char **envp)
@@ -63,17 +80,23 @@ static int	execute_pipeline(t_cmd *cmds, char **envp)
 	while (current)
 	{
 		// Se há próximo comando, cria pipe
-		if (current->next && pipe(pipe_fd) == -1)
+		if (current->next)
 		{
-			perror("pipe");
-			return (1);
+			if (pipe(pipe_fd) == -1)
+				return (handle_pipe_error());
 		}
 
 		pid = fork();
 		if (pid == -1)
 		{
-			perror("fork");
-			return (1);
+			if (prev_fd != -1)
+				close(prev_fd);
+			if (current->next)
+			{
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
+			}
+			return (handle_fork_error());
 		}
 		else if (pid == 0)
 		{
@@ -82,7 +105,11 @@ static int	execute_pipeline(t_cmd *cmds, char **envp)
 			// Conecta entrada do pipe anterior
 			if (prev_fd != -1)
 			{
-				dup2(prev_fd, STDIN_FILENO);
+				if (dup2(prev_fd, STDIN_FILENO) == -1)
+				{
+					perror("dup2 prev_fd");
+					exit(EXIT_FAILURE);
+				}
 				close(prev_fd);
 			}
 			
@@ -90,11 +117,17 @@ static int	execute_pipeline(t_cmd *cmds, char **envp)
 			if (current->next)
 			{
 				close(pipe_fd[0]); // Fecha leitura
-				dup2(pipe_fd[1], STDOUT_FILENO);
+				if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+				{
+					perror("dup2 pipe_fd");
+					exit(EXIT_FAILURE);
+				}
 				close(pipe_fd[1]);
 			}
 			
-			// TODO: Aplicar redirecionamentos específicos do comando
+			// Aplica redirecionamentos específicos do comando
+			if (apply_redirections(current) == -1)
+				exit(EXIT_FAILURE);
 			
 			// Executa built-in ou comando externo
 			if (is_builtin(current->args[0]))
@@ -106,13 +139,16 @@ static int	execute_pipeline(t_cmd *cmds, char **envp)
 				
 				if (!current->path)
 				{
-					printf("minishell: %s: command not found\n", current->args[0]);
-					exit(127);
+					handle_exec_error(current->args[0], ENOENT);
+					exit(EXIT_NOT_FOUND);
 				}
 				
+				if (check_command_access(current->path) != EXIT_SUCCESS)
+					exit(g_last_exit_status);
+				
 				execve(current->path, current->args, envp);
-				perror("execve");
-				exit(126);
+				handle_exec_error(current->path, errno);
+				exit(EXIT_EXEC_FAIL);
 			}
 		}
 		else
@@ -134,7 +170,8 @@ static int	execute_pipeline(t_cmd *cmds, char **envp)
 			if (!current->next)
 			{
 				waitpid(pid, &status, 0);
-				last_status = WEXITSTATUS(status);
+				update_exit_status(status);
+				last_status = g_last_exit_status;
 			}
 		}
 		
@@ -161,7 +198,6 @@ void	execute_commands(t_cmd *cmds, char **envp)
 	else
 		exit_status = execute_pipeline(cmds, envp);
 
-	// TODO: Salvar exit_status em uma variável global ou estrutura
-	// para expansão de $? no parser
+	// O exit status já foi salvo globalmente pelas funções acima
 	(void)exit_status;
 }
