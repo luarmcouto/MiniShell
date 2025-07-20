@@ -64,7 +64,7 @@ static char **create_args_array(t_token **tokens)
 	return (args);
 }
 
-// Função para processar redirecionamentos (versão simples)
+/*// Função para processar redirecionamentos (versão simples)
 static int process_redirections(t_token **tokens, t_cmd *cmd)
 {
 	t_token *current = *tokens;
@@ -115,6 +115,69 @@ static int process_redirections(t_token **tokens, t_cmd *cmd)
 			
 			// TODO: Na semana 2, implementar abertura real do arquivo
 			printf("DEBUG: Append redirection to '%s'\n", current->value);
+			current = current->next;
+		}
+	}
+	
+	*tokens = current;
+	return (1);
+}*/
+// Substitua a função process_redirections no parser.c por esta versão:
+
+static int process_redirections(t_token **tokens, t_cmd *cmd)
+{
+	t_token *current = *tokens;
+	
+	while (current && (current->type == TOKEN_REDIRECT_IN || 
+					   current->type == TOKEN_REDIRECT_OUT || 
+					   current->type == TOKEN_APPEND))
+	{
+		if (current->type == TOKEN_REDIRECT_IN)
+		{
+			// < arquivo
+			current = current->next;
+			if (!current || current->type != TOKEN_WORD)
+			{
+				printf("minishell: syntax error near unexpected token `newline'\n");
+				return (0);
+			}
+			
+			// AGORA REALMENTE PROCESSA O REDIRECIONAMENTO
+			if (process_redirection_token(cmd, current->value, TOKEN_REDIRECT_IN) == -1)
+				return (0);
+			
+			current = current->next;
+		}
+		else if (current->type == TOKEN_REDIRECT_OUT)
+		{
+			// > arquivo
+			current = current->next;
+			if (!current || current->type != TOKEN_WORD)
+			{
+				printf("minishell: syntax error near unexpected token `newline'\n");
+				return (0);
+			}
+			
+			// AGORA REALMENTE PROCESSA O REDIRECIONAMENTO
+			if (process_redirection_token(cmd, current->value, TOKEN_REDIRECT_OUT) == -1)
+				return (0);
+				
+			current = current->next;
+		}
+		else if (current->type == TOKEN_APPEND)
+		{
+			// >> arquivo
+			current = current->next;
+			if (!current || current->type != TOKEN_WORD)
+			{
+				printf("minishell: syntax error near unexpected token `newline'\n");
+				return (0);
+			}
+			
+			// AGORA REALMENTE PROCESSA O REDIRECIONAMENTO
+			if (process_redirection_token(cmd, current->value, TOKEN_APPEND) == -1)
+				return (0);
+				
 			current = current->next;
 		}
 	}
