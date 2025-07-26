@@ -1,80 +1,109 @@
-# Program name
-NAME		= minishell
+# COLORS
+RED    = $(shell printf "\33[31m")
+GREEN  = $(shell printf "\33[32m")
+WHITE  = $(shell printf "\33[37m")
+YELLOW = $(shell printf "\33[33m")
+RESET  = $(shell printf "\33[0m")
+BLUE   = $(shell printf "\33[34m")
+PURPLE = $(shell printf "\33[35m")
+TITLE  = $(shell printf "\33[32;40m")
 
-# Directories
-SRC_DIR		= src
-INC_DIR		= includes
-LIBFT_DIR	= libft
-OBJ_DIR		= obj
+LIBFTDIR = libft
+NAME     = minishell
+FLAGS    = -Wall -Wextra -Werror -g -Iincludes
+IFLAGS   = -Iincludes/ -I${LIBFTDIR}
+CC       = cc
+SRCS     = $(wildcard srcs/*.c) $(wildcard srcs/*/*.c)
+OBJS     = ${SRCS:.c=.o}
+INCLUDE  = -L${LIBFTDIR} -lft -lreadline
+VALGRIND = valgrind  --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=readline.supp
+ENV      = env -i ${VALGRIND}
 
-# Compiler and flags
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g
-INCLUDES	= -I$(INC_DIR) -I$(LIBFT_DIR)
-LIBS		= -L$(LIBFT_DIR) -lft -lreadline
+#set readline for MacOs and Linux
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+    INCLUDE = -L${LIBFTDIR} -lft -lreadline -lhistory
+    READLINE =
+else ifeq ($(UNAME), Darwin)
+    INCLUDE = -L${LIBFTDIR} -lft -L/opt/homebrew/opt/readline/lib -lreadline
+    READLINE = -I/opt/homebrew/opt/readline/include
+endif
 
-# Source files with wildcards (automatic!)
-SRCS		= $(shell find $(SRC_DIR) -name "*.c")
+all: submodule ${NAME}
 
-# Object files
-OBJS		= $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+submodule:
+	@if [ ! -d "${LIBFTDIR}" ]; then \
+		echo "$(YELLOW)Cloning libft submodule...$(RESET)"; \
+		git clone --recurse-submodules https://github.com/luarmcouto/libft.git ${LIBFTDIR}; \
+	fi
+	@git submodule update --init --recursive
 
-# Libft
-LIBFT		= $(LIBFT_DIR)/libft.a
+${NAME}: ${OBJS}
+	@if [ -f ${LIBFTDIR}/Makefile ]; then make --silent -C ${LIBFTDIR}; fi
+	@${CC} ${FLAGS} ${READLINE} ${OBJS} ${INCLUDE} -o ${NAME}
+	@echo "$(TITLE)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo "$(PURPLE)  ███╗   ███╗██╗███╗   ██╗██╗██╗  ██╗███████╗██╗     ██╗       "
+	@echo "  ████╗ ████║██║████╗  ██║██║██║  ██║██╔════╝██║     ██║       "
+	@echo "  ██╔████╔██║██║██╔██╗ ██║██║███████║█████╗  ██║     ██║       "
+	@echo "  ██║╚██╔╝██║██║██║╚██╗██║██║██╔══██║██╔══╝  ██║     ██║       "
+	@echo "  ██║ ╚═╝ ██║██║██║ ╚████║██║██║  ██║███████╗███████╗███████╗  "
+	@echo "  ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝  "
+	@echo "$(GREEN)━━━━━━━━━━━━━━━━━[$(RESET)Made with $(RED)♥ $(RESET)by $(PURPLE)@luarodri$(RESET) and $(PURPLE)@iwietzke$(TITLE)]━━━━━━"
+	@echo
+	@echo "$(GREEN) Successfully compiled minishell.$(RESET)"
+	@echo
 
-# Colors for output
-GREEN		= \033[0;32m
-RED			= \033[0;31m
-BLUE		= \033[0;34m
-YELLOW		= \033[1;33m
-NC			= \033[0m # No Color
-
-# Rules
-all: $(NAME)
-
-$(NAME): $(LIBFT) $(OBJS)
-	@echo "$(BLUE)Linking $(NAME)...$(NC)"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
-	@echo "$(GREEN)$(NAME) compiled successfully!$(NC)"
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(dir $@)
-	@echo "$(YELLOW)Compiling $<...$(NC)"
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-$(LIBFT):
-	@echo "$(BLUE)Compiling libft...$(NC)"
-	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
-
-# Simple test
-test: $(NAME)
-	@echo "$(GREEN)Running basic tests...$(NC)"
-	@echo "pwd" | ./$(NAME) || echo "Test 1 completed"
-	@echo "echo hello world" | ./$(NAME) || echo "Test 2 completed"
-	@echo "$(GREEN)Tests completed!$(NC)"
-
-# Help menu (opcional - só se quiser)
-help:
-	@echo "$(BLUE)Minishell Makefile$(NC)"
-	@echo ""
-	@echo "Commands:"
-	@echo "  make           - Compile the project"
-	@echo "  make clean     - Remove object files"
-	@echo "  make fclean    - Remove all generated files"
-	@echo "  make re        - Clean and rebuild"
-	@echo "  make test      - Run basic tests"
-	@echo "  make help      - Show this help"
+.c.o:
+	@${CC} ${FLAGS} ${READLINE} ${IFLAGS} -c $< -o ${<:.c=.o}
+	@clear
+	@echo "$(RESET)[$(GREEN)OK$(RESET)]$(BLUE) Compiling $<$(YELLOW)"
 
 clean:
-	@echo "$(RED)Cleaning objects...$(NC)"
-	@rm -rf $(OBJ_DIR)
-	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
+	@${RM} ${OBJS} ${NAME}
+	@if [ -f ${LIBFTDIR}/Makefile ]; then cd ${LIBFTDIR} && $(MAKE) --silent clean; fi
+	@clear
+	@echo
+	@echo "$(RED)┏┓┓ ┏┓┏┓┳┓┏┓┳┓"
+	@echo "┃ ┃ ┣ ┣┫┃┃┣ ┃┃"
+	@echo "┗┛┗┛┗┛┛┗┛┗┗┛┻┛"
+	@echo
 
 fclean: clean
-	@echo "$(RED)Cleaning $(NAME)...$(NC)"
-	@rm -f $(NAME)
-	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
+	rm -rf ${LIBFTDIR}
+	rm -f ${NAME}
+	@clear
+	@echo
+	@echo "$(RED)┏┓┓ ┏┓┏┓┳┓┏┓┳┓"
+	@echo "┃ ┃ ┣ ┣┫┃┃┣ ┃┃"
+	@echo "┗┛┗┛┗┛┛┗┛┗┗┛┻┛"
+	@echo
+
+test: ${NAME} readline.supp
+	${VALGRIND} ./${NAME}
+
+readline.supp:
+	echo "{" > readline.supp
+	echo "    leak readline" >> readline.supp
+	echo "    Memcheck:Leak" >> readline.supp
+	echo "    ..." >> readline.supp
+	echo "    fun:readline" >> readline.supp
+	echo "}" >> readline.supp
+	echo "{" >> readline.supp
+	echo "    leak add_history" >> readline.supp
+	echo "    Memcheck:Leak" >> readline.supp
+	echo "    ..." >> readline.supp
+	echo "    fun:add_history" >> readline.supp
+	echo "}" >> readline.supp
+	echo "{" >> readline.supp
+	echo "    leak rl_parse_and_bind" >> readline.supp
+	echo "    Memcheck:Leak" >> readline.supp
+	echo "    ..." >> readline.supp
+	echo "    fun:add_history" >> readline.supp
+	echo "}" >> readline.supp
+
+env: ${NAME}
+	${ENV} ./${NAME}
 
 re: fclean all
 
-.PHONY: all clean fclean re test help
+.PHONY: all bonus clean fclean re test
