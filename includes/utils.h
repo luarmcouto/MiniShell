@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_len.c                                        :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 16:40:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/07/21 21:08:18 by luarodri         ###   ########.fr       */
+/*   Created: 2025/07/27 17:59:10 by iwietzke          #+#    #+#             */
+/*   Updated: 2025/07/27 17:59:10 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
-#include <input.h>
+#ifndef UTILS_H
+# define UTILS_H
 
-bool	check_line_len(char *line)
-{
-	if (ft_strlen(line) > 200)
-		return (ft_putendl_fd(LINE_ERROR, 2), false);
-	return (true);
-}
+# include <structs.h>
+
+// string_utils.c
+char	*ft_strjoin_free(char *s1, char *s2);
+int     ft_isspace(char c);
+
+// debug_utils.c
+void	print_tokens(t_list *token_lst);
+
+#endif

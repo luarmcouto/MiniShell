@@ -36,9 +36,13 @@ void	terminal(t_shell *shell, char **envp)
 		free_shell(shell);
 		return ;
 	}
+
+	// NOVA SEÇÃO: Processar entrada com lexer
+	lexer(shell, shell->trim_input);
 	
-	// Por enquanto só imprime o que foi digitado
-	printf("You typed: %s\n", shell->input);
+	// Por enquanto só imprime os tokens para debug
+	printf("Tokens criados:\n");
+	print_tokens(shell->token_lst);
 	
 	// last_process(0); // TODO: Implementar sistema de processos
 	free_shell(shell);

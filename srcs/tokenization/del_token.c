@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_len.c                                        :+:      :+:    :+:   */
+/*   del_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/21 16:40:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/07/21 21:08:18 by luarodri         ###   ########.fr       */
+/*   Created: 2025/07/27 17:56:36 by iwietzke          #+#    #+#             */
+/*   Updated: 2025/07/27 17:56:36 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-#include <input.h>
 
-bool	check_line_len(char *line)
+void	del_token(void *content)
 {
-	if (ft_strlen(line) > 200)
-		return (ft_putendl_fd(LINE_ERROR, 2), false);
-	return (true);
+	t_token	*token;
+
+	token = (t_token *)content;
+	if (token)
+	{
+		if (token->value)
+			free(token->value);
+		free(token);
+	}
 }

@@ -56,6 +56,8 @@ void	reset_shell(t_shell *shell)
 
 void	free_shell(t_shell *shell)
 {
+	if (shell->token_lst)
+		ft_lstclear(&shell->token_lst, del_token);
 	if (shell->input)
 		free(shell->input);
 	if (shell->trim_input)
