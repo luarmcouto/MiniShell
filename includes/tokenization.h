@@ -84,6 +84,26 @@ int				handle_or(t_shell *shell, char *input, int i);
 int				handle_parenthesis(t_shell *shell, char *input, int i);
 int				is_logical_operator(char *input, int i);
 
+/* ====== EXPANSION SYSTEM ====== */
+
+// handle_expand.c - Sistema principal de expansão
+char			*handle_expand(t_shell *shell, char *input, int i);
+int				process_expansion(t_shell *shell, char **str, char *input, int i);
+int				expand_unquoted(t_shell *shell, char **str, char *input, int i);
+int				expand_in_quotes(t_shell *shell, char **str, char *input, int i);
+int				expand_single_quotes(t_shell *shell, char **str, char *input, int i);
+int				add_literal_chars(t_shell *shell, char **str, char *input, int i);
+
+// handle_expand_utils.c - Utilitários de expansão
+void			expand_exit_status(t_shell *shell, char **str);
+void			expand_pid(t_shell *shell, char **str);
+t_token			*create_token(t_shell *shell, char *str);
+bool			is_valid_var_char(char c);
+bool			is_valid_var_start(char c);
+bool			should_expand(char *token);
+int				count_expansion_parts(char *expanded);
+char			**split_expansion(t_shell *shell, char *expanded);
+
 /* ====== UTILITY FUNCTIONS ====== */
 
 // tokenize_utils.c

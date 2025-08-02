@@ -36,6 +36,7 @@
 # include <builtins.h>
 # include <tokenization.h>
 # include <utils.h>
+# include <exec.h>
 
 // MACROS
 # define ESC_START "\001\033[1;91m\002"
