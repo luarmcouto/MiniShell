@@ -17,7 +17,10 @@
 
 // string_utils.c
 char	*ft_strjoin_free(char *s1, char *s2);
-int     ft_isspace(char c);
+int		ft_isspace(char c);
+char	*ft_strndup(const char *s, size_t n);
+int		ft_array_len(char **array);
+void	ft_free_array(char **array);
 
 // debug_utils.c
 void	print_tokens(t_list *token_lst);
