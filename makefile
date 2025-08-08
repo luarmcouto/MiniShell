@@ -1,12 +1,13 @@
 # COLORS
-RED    = $(shell printf "\33[31m")
-GREEN  = $(shell printf "\33[32m")
-WHITE  = $(shell printf "\33[37m")
-YELLOW = $(shell printf "\33[33m")
-RESET  = $(shell printf "\33[0m")
-BLUE   = $(shell printf "\33[34m")
-PURPLE = $(shell printf "\33[35m")
-TITLE  = $(shell printf "\33[32;40m")
+RED    = \033[31m
+GREEN  = \033[32m
+WHITE  = \033[37m
+YELLOW = \033[33m
+RESET  = \033[0m
+BLUE   = \033[34m
+PURPLE = \033[35m
+TITLE  = \033[32;40m
+BOLD   = \033[1m
 
 LIBFTDIR = libft
 NAME     = minishell
@@ -19,7 +20,11 @@ INCLUDE  = -L${LIBFTDIR} -lft -lreadline
 VALGRIND = valgrind  --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=readline.supp
 ENV      = env -i ${VALGRIND}
 
-#set readline for MacOs and Linux
+# Progress variables
+TOTAL_FILES = $(words $(SRCS))
+COMPILED = 0
+
+# Set readline for MacOs and Linux
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
     INCLUDE = -L${LIBFTDIR} -lft -lreadline -lhistory
@@ -29,81 +34,133 @@ else ifeq ($(UNAME), Darwin)
     READLINE = -I/opt/homebrew/opt/readline/include
 endif
 
-all: submodule ${NAME}
+all: libft ${NAME}
 
-submodule:
+# Improved libft handling
+libft:
+	@printf "$(YELLOW)$(BOLD)🔧 Checking libft...$(RESET)\n"
 	@if [ ! -d "${LIBFTDIR}" ]; then \
-		echo "$(YELLOW)Cloning libft submodule...$(RESET)"; \
-		git clone --recurse-submodules https://github.com/luarmcouto/libft.git ${LIBFTDIR}; \
+		printf "$(YELLOW)📦 Libft not found. Cloning...$(RESET)\n"; \
+		git clone https://github.com/luarmcouto/libft.git ${LIBFTDIR}; \
 	fi
-	@git submodule update --init --recursive
+	@if [ ! -f "${LIBFTDIR}/libft.a" ]; then \
+		printf "$(YELLOW)🔨 Building libft...$(RESET)\n"; \
+		make -C ${LIBFTDIR}; \
+		printf "$(GREEN)✓ Libft ready!$(RESET)\n"; \
+	else \
+		printf "$(GREEN)✓ Libft already compiled!$(RESET)\n"; \
+	fi
 
-${NAME}: ${OBJS}
-	@if [ -f ${LIBFTDIR}/Makefile ]; then make --silent -C ${LIBFTDIR}; fi
+# Progress bar function for minishell
+define progress_bar
+	$(eval COMPILED := $(shell echo $$(($(COMPILED) + 1))))
+	$(eval PERCENT := $(shell echo $$(($(COMPILED) * 100 / $(TOTAL_FILES)))))
+	$(eval BARS := $(shell echo $$(($(PERCENT) / 2))))
+	$(eval SPACES := $(shell echo $$((50 - $(BARS)))))
+	$(eval FILENAME := $(shell basename $< .c))
+	@printf "\r$(BLUE)$(BOLD)[%3d%%]$(RESET) $(GREEN)%s$(RESET) $(YELLOW)%s$(RESET)" \
+		$(PERCENT) \
+		"$$(printf '%*s' $(BARS) | tr ' ' '█')" \
+		"$(FILENAME)"
+	@if [ $(COMPILED) -eq $(TOTAL_FILES) ]; then printf "\n"; fi
+endef
+
+${NAME}: ${OBJS} libft
+	@printf "$(YELLOW)$(BOLD)🔗 Linking ${NAME}...$(RESET)\n"
 	@${CC} ${FLAGS} ${READLINE} ${OBJS} ${INCLUDE} -o ${NAME}
-	@echo "$(TITLE)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-	@echo "$(PURPLE)  ███╗   ███╗██╗███╗   ██╗██╗██╗  ██╗███████╗██╗     ██╗       "
-	@echo "  ████╗ ████║██║████╗  ██║██║██║  ██║██╔════╝██║     ██║       "
-	@echo "  ██╔████╔██║██║██╔██╗ ██║██║███████║█████╗  ██║     ██║       "
-	@echo "  ██║╚██╔╝██║██║██║╚██╗██║██║██╔══██║██╔══╝  ██║     ██║       "
-	@echo "  ██║ ╚═╝ ██║██║██║ ╚████║██║██║  ██║███████╗███████╗███████╗  "
-	@echo "  ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝  "
-	@echo "$(GREEN)━━━━━━━━━━━━━━━━━[$(RESET)Made with $(RED)♥ $(RESET)by $(PURPLE)@luarodri$(RESET) and $(PURPLE)@iwietzke$(TITLE)]━━━━━━"
-	@echo
-	@echo "$(GREEN) Successfully compiled minishell.$(RESET)"
-	@echo
+	@printf "\n"
+	@printf "$(TITLE)╔══════════════════════════════════════════════════════════════════════════════╗$(RESET)\n"
+	@printf "$(TITLE)║                                                                              ║$(RESET)\n"
+	@printf "$(CYAN)║      ███╗   ███╗██╗███╗   ██╗██╗$(BLUE)███████╗██╗  ██╗███████╗██╗     ██╗     $(RESET)\n"
+	@printf "$(CYAN)║      ████╗ ████║██║████╗  ██║██║$(BLUE)██╔════╝██║  ██║██╔════╝██║     ██║     $(RESET)\n"
+	@printf "$(CYAN)║      ██╔████╔██║██║██╔██╗ ██║██║$(BLUE)███████╗███████║█████╗  ██║     ██║     $(RESET)\n"
+	@printf "$(CYAN)║      ██║╚██╔╝██║██║██║╚██╗██║██║$(BLUE)╚════██║██╔══██║██╔══╝  ██║     ██║     $(RESET)\n"
+	@printf "$(CYAN)║      ██║ ╚═╝ ██║██║██║ ╚████║██║$(BLUE)███████║██║  ██║███████╗███████╗███████╗$(RESET)\n"
+	@printf "$(CYAN)║      ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝$(BLUE)╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝$(RESET)\n"
+	@printf "$(TITLE)║                                                                              ║$(RESET)\n"
+	@printf "$(TITLE)║                                                                              ║$(RESET)\n"
+	@printf "$(GREEN)║       ╔═══════════════════════════════════════════════════════════════╗       $(RESET)\n"
+	@printf "$(GREEN)║       ║            $(WHITE)🐚 $(BOLD)A Beautiful Shell Implementation$(RESET) $(GREEN)🐚            ║       $(RESET)\n"
+	@printf "$(GREEN)║       ║         $(CYAN)Full POSIX compliance $(WHITE)• $(BLUE)Pipes $(WHITE)• $(PURPLE)Redirections $(WHITE)• $(RED)Built-ins$(GREEN)         ║       $(RESET)\n"
+	@printf "$(GREEN)║       ║              $(YELLOW)Advanced parsing with Binary Tree architecture$(GREEN)              ║       $(RESET)\n"
+	@printf "$(GREEN)║       ║                   $(YELLOW)Crafted with $(RED)♥$(YELLOW) by $(CYAN)@luarodri$(YELLOW) & $(CYAN)@iwietzke$(GREEN)                   ║       $(RESET)\n"
+	@printf "$(GREEN)║       ╚═══════════════════════════════════════════════════════════════╝       $(RESET)\n"
+	@printf "$(TITLE)║                                                                              ║$(RESET)\n"
+	@printf "$(TITLE)╚══════════════════════════════════════════════════════════════════════════════╝$(RESET)\n"
+	@printf "\n"
+	@printf "$(B_GREEN)                          🎉 SUCCESSFULLY COMPILED! 🎉                           $(RESET)\n"
+	@printf "$(B_BLUE)                        Your shell is ready to command! 💪                       $(RESET)\n"
+	@printf "\n"
 
 .c.o:
-	@${CC} ${FLAGS} ${READLINE} ${IFLAGS} -c $< -o ${<:.c=.o}
-	@clear
-	@echo "$(RESET)[$(GREEN)OK$(RESET)]$(BLUE) Compiling $<$(YELLOW)"
+	@${CC} ${FLAGS} ${READLINE} ${IFLAGS} -c $< -o $@
+	@$(progress_bar)
 
 clean:
-	@${RM} ${OBJS} ${NAME}
-	@if [ -f ${LIBFTDIR}/Makefile ]; then cd ${LIBFTDIR} && $(MAKE) --silent clean; fi
-	@clear
-	@echo
-	@echo "$(RED)┏┓┓ ┏┓┏┓┳┓┏┓┳┓"
-	@echo "┃ ┃ ┣ ┣┫┃┃┣ ┃┃"
-	@echo "┗┛┗┛┗┛┛┗┛┗┗┛┻┛"
-	@echo
+	@printf "$(YELLOW)🧹 Cleaning object files...$(RESET)\n"
+	@${RM} ${OBJS}
+	@if [ -d ${LIBFTDIR} ]; then make -C ${LIBFTDIR} clean; fi
+	@printf "$(GREEN)✓ Clean completed.$(RESET)\n"
 
 fclean: clean
-	rm -rf ${LIBFTDIR}
-	rm -f ${NAME}
-	@clear
-	@echo
-	@echo "$(RED)┏┓┓ ┏┓┏┓┳┓┏┓┳┓"
-	@echo "┃ ┃ ┣ ┣┫┃┃┣ ┃┃"
-	@echo "┗┛┗┛┗┛┛┗┛┗┗┛┻┛"
-	@echo
+	@printf "$(YELLOW)💥 Full clean with libft removal...$(RESET)\n"
+	@${RM} ${NAME}
+	@rm -rf ${LIBFTDIR}
+	@printf "$(GREEN)✓ Full clean with libft removal completed.$(RESET)\n"
 
 test: ${NAME} readline.supp
+	@printf "$(BLUE)🧪 Running tests with Valgrind...$(RESET)\n"
 	${VALGRIND} ./${NAME}
 
 readline.supp:
-	echo "{" > readline.supp
-	echo "    leak readline" >> readline.supp
-	echo "    Memcheck:Leak" >> readline.supp
-	echo "    ..." >> readline.supp
-	echo "    fun:readline" >> readline.supp
-	echo "}" >> readline.supp
-	echo "{" >> readline.supp
-	echo "    leak add_history" >> readline.supp
-	echo "    Memcheck:Leak" >> readline.supp
-	echo "    ..." >> readline.supp
-	echo "    fun:add_history" >> readline.supp
-	echo "}" >> readline.supp
-	echo "{" >> readline.supp
-	echo "    leak rl_parse_and_bind" >> readline.supp
-	echo "    Memcheck:Leak" >> readline.supp
-	echo "    ..." >> readline.supp
-	echo "    fun:add_history" >> readline.supp
-	echo "}" >> readline.supp
+	@printf "$(YELLOW)📝 Creating readline suppression file...$(RESET)\n"
+	@echo "{" > readline.supp
+	@echo "    leak readline" >> readline.supp
+	@echo "    Memcheck:Leak" >> readline.supp
+	@echo "    ..." >> readline.supp
+	@echo "    fun:readline" >> readline.supp
+	@echo "}" >> readline.supp
+	@echo "{" >> readline.supp
+	@echo "    leak add_history" >> readline.supp
+	@echo "    Memcheck:Leak" >> readline.supp
+	@echo "    ..." >> readline.supp
+	@echo "    fun:add_history" >> readline.supp
+	@echo "}" >> readline.supp
+	@echo "{" >> readline.supp
+	@echo "    leak rl_parse_and_bind" >> readline.supp
+	@echo "    Memcheck:Leak" >> readline.supp
+	@echo "    ..." >> readline.supp
+	@echo "    fun:add_history" >> readline.supp
+	@echo "}" >> readline.supp
+	@printf "$(GREEN)✓ Suppression file created.$(RESET)\n"
 
 env: ${NAME}
+	@printf "$(BLUE)🌍 Running with clean environment...$(RESET)\n"
 	${ENV} ./${NAME}
 
 re: fclean all
 
-.PHONY: all bonus clean fclean re test
+# Force rebuild of everything including libft
+re-all: fclean-all all
+
+# Debug rule to check libft
+debug-libft:
+	@printf "$(BLUE)🔍 Libft Debug Information:$(RESET)\n"
+	@printf "$(BLUE)📂 Libft directory: ${LIBFTDIR}$(RESET)\n"
+	@printf "$(BLUE)📁 Libft exists: $(shell [ -d ${LIBFTDIR} ] && echo "$(GREEN)YES$(RESET)" || echo "$(RED)NO$(RESET)")\n"
+	@printf "$(BLUE)📚 Libft.a exists: $(shell [ -f ${LIBFTDIR}/libft.a ] && echo "$(GREEN)YES$(RESET)" || echo "$(RED)NO$(RESET)")\n"
+	@if [ -d ${LIBFTDIR} ]; then \
+		printf "$(BLUE)📋 Libft contents:$(RESET)\n"; \
+		ls -la ${LIBFTDIR}/ | head -10; \
+	fi
+
+# Show compilation stats
+stats:
+	@printf "$(BLUE)📊 Project Statistics:$(RESET)\n"
+	@printf "$(YELLOW)📁 Total source files: $(BOLD)$(TOTAL_FILES)$(RESET)\n"
+	@printf "$(YELLOW)📂 Source directories:$(RESET)\n"
+	@find srcs -type d | sed 's/^/  /'
+	@printf "$(YELLOW)🗂️  Include files:$(RESET)\n"
+	@find includes -name "*.h" | sed 's/^/  /'
+
+.PHONY: all clean fclean fclean-all re re-all test env libft debug-libft stats
