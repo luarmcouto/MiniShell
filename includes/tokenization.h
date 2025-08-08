@@ -118,4 +118,7 @@ int				find_quote_end(char *input, int i);
 int				check_balance(char *input, int i);
 int				set_hered(t_shell *shell, t_token *new_token, char *input, int i);
 
+//build_tree_utils.c (função auxiliar)
+int				check_token(t_list *node);
+
 #endif
