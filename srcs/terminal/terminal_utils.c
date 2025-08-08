@@ -62,6 +62,8 @@ void	free_shell(t_shell *shell)
 		free(shell->input);
 	if (shell->trim_input)
 		free(shell->trim_input);
+	if (shell->root)
+		free_bst(shell->root);
 	if (shell->cmd_path)
 		free(shell->cmd_path);
 	if (shell->cwd)
