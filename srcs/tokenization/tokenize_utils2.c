@@ -12,6 +12,16 @@
 
 #include <minishell.h>
 
+/**
+ * check_balance - Encontra parênteses correspondente
+ * @input: string de entrada
+ * @i: posição do parênteses de abertura
+ * 
+ * Encontra a posição do parênteses de fechamento correspondente
+ * considerando o balanceamento correto
+ * 
+ * Return: posição do parênteses de fechamento
+ */
 int	check_balance(char *input, int i)
 {
 	int	balance;

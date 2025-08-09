@@ -48,6 +48,59 @@ static const char	*get_token_state_name(t_token_state state)
 	return ("UNKNOWN");
 }
 
+/**
+ * print_token_details - Imprime detalhes específicos de um token
+ * @token: token a ser analisado
+ */
+void	print_token_details(t_token *token)
+{
+	printf("\n=== TOKEN DETAILS ===\n");
+	printf("Value: '%s'\n", token->value ? token->value : "(null)");
+	printf("Type: %s\n", get_token_type_name(token->type));
+	printf("State: %s\n", get_token_state_name(token->state));
+	printf("Position: %d\n", token->pos);
+	printf("Length: %zu\n", token->value ? ft_strlen(token->value) : 0);
+	printf("===================\n\n");
+}
+
+/**
+ * analyze_token_sequence - Analisa sequência de tokens para debug
+ * @token_lst: lista de tokens
+ */
+void	analyze_token_sequence(t_list *token_lst)
+{
+	t_token	*token;
+	int		parenthesis_count;
+	int		pipe_count;
+	int		redir_count;
+
+	parenthesis_count = 0;
+	pipe_count = 0;
+	redir_count = 0;
+	
+	printf("\n=== TOKEN SEQUENCE ANALYSIS ===\n");
+	
+	while (token_lst)
+	{
+		token = (t_token *)token_lst->content;
+		
+		if (token->type == PARENTHESIS)
+			parenthesis_count++;
+		else if (token->type == PIPE)
+			pipe_count++;
+		else if (token->type == INFILE || token->type == OUTFILE || 
+				token->type == APPEND || token->type == HEREDOC)
+			redir_count++;
+		
+		token_lst = token_lst->next;
+	}
+	
+	printf("Parentheses tokens: %d\n", parenthesis_count);
+	printf("Pipe tokens: %d\n", pipe_count);
+	printf("Redirection tokens: %d\n", redir_count);
+	printf("=============================\n\n");
+}
+
 void	print_tokens(t_list *token_lst)
 {
 	t_token	*token;

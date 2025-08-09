@@ -51,7 +51,7 @@ void	tokenize_input(t_shell *shell, char *input)
 		// Pipe simples (|)
 		else if (input[i] == '|')
 			i = handle_pipe(shell, input, i);
-		// Parênteses (, )
+		// Parênteses (, ) - com validação completa
 		else if (input[i] == '(' || input[i] == ')')
 			i = handle_parenthesis(shell, input, i);
 		// Redirecionamentos (<, >, >>, <<)

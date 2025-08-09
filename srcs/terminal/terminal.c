@@ -21,7 +21,8 @@ void	terminal(t_shell *shell, char **envp)
 	
 	if (shell->input && shell->input[0] != '\0')
 		add_history(shell->input);
-	// Validação de input - NOVA SEÇÃO
+	
+	// Validação de input
 	if (shell->input && input_validation(shell))
 	{
 		free_shell(shell);
@@ -37,23 +38,25 @@ void	terminal(t_shell *shell, char **envp)
 		return ;
 	}
 
-	// NOVA SEÇÃO: Processar entrada com lexer
+	// Processar entrada com lexer
 	lexer(shell, shell->trim_input);
-
-	// Construir árvore binária a partir dos tokens
-	shell->root = build_tree(shell, shell->token_lst);
-
-	// Por enquanto só imprime os tokens e árvore para debug
-	printf("Tokens criados:\n");
-	print_tokens(shell->token_lst);
-
-	printf("\nÁrvore binária:\n");
-	print_bst(shell->root, 5);
-
-	// TODO: Implementar sistema de execução da árvore
-	// exec_tree(shell, shell->root);
 	
-	// last_process(0); // TODO: Implementar sistema de processos
+	// Debug avançado dos tokens
+	printf("\n🚀 === ADVANCED TOKEN ANALYSIS ===\n");
+	print_tokens(shell->token_lst);
+	
+	// Análise específica de parênteses
+	print_parenthesis_balance(shell->token_lst);
+	
+	// Análise da estrutura do comando
+	debug_command_structure(shell->token_lst);
+	
+	// Análise da sequência de tokens
+	analyze_token_sequence(shell->token_lst);
+	
+	// TODO: Implementar sistema de processos na semana 3
+	// last_process(0);
+	
 	free_shell(shell);
 	terminal(shell, envp);
 }

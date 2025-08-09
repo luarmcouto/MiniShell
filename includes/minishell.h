@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// TODO: Checar protótipos que estão aqui ou em outros .h, porém a função já não está mais em uso
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -38,6 +40,7 @@
 # include <utils.h>
 # include <exec.h>
 # include <binary_tree.h>
+# include <logic_tree.h>
 
 
 // MACROS
