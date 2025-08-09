@@ -78,31 +78,18 @@ int				handle_quoted_str(t_shell *shell, char **str, char *input, int i);
 int				handle_nonquoted_str(t_shell *shell, char **str, char *input, int i);
 char			*ft_strjoin_char(char *str, char c);
 
-// handle_operators.c (BONUS PREPARATION)
+// handle_parenthesis.c
+int				handle_parenthesis(t_shell *shell, char *input, int i);
+int				handle_closing(t_shell *shell, char *input, int i, bool valid);
+bool			validate_subs(char *subs);
+int				handle_opening(t_shell *shell, char *input, int i, bool valid);
+int				jump_spaces(char *input, int i);
+
+// handle_logic_operators.c (BONUS PREPARATION)
 int				handle_andif(t_shell *shell, char *input, int i);
 int				handle_or(t_shell *shell, char *input, int i);
-int				handle_parenthesis(t_shell *shell, char *input, int i);
 int				is_logical_operator(char *input, int i);
-
-/* ====== EXPANSION SYSTEM ====== */
-
-// handle_expand.c - Sistema principal de expansão
-char			*handle_expand(t_shell *shell, char *input, int i);
-int				process_expansion(t_shell *shell, char **str, char *input, int i);
-int				expand_unquoted(t_shell *shell, char **str, char *input, int i);
-int				expand_in_quotes(t_shell *shell, char **str, char *input, int i);
-int				expand_single_quotes(t_shell *shell, char **str, char *input, int i);
-int				add_literal_chars(t_shell *shell, char **str, char *input, int i);
-
-// handle_expand_utils.c - Utilitários de expansão
-void			expand_exit_status(t_shell *shell, char **str);
-void			expand_pid(t_shell *shell, char **str);
-t_token			*create_token(t_shell *shell, char *str);
-bool			is_valid_var_char(char c);
-bool			is_valid_var_start(char c);
-bool			should_expand(char *token);
-int				count_expansion_parts(char *expanded);
-char			**split_expansion(t_shell *shell, char *expanded);
+bool			validate_logical_context(t_shell *shell, char *input, int i, int operator);
 
 /* ====== UTILITY FUNCTIONS ====== */
 
@@ -118,7 +105,18 @@ int				find_quote_end(char *input, int i);
 int				check_balance(char *input, int i);
 int				set_hered(t_shell *shell, t_token *new_token, char *input, int i);
 
-//build_tree_utils.c (função auxiliar)
-int				check_token(t_list *node);
+/* ====== EXPANSION SYSTEM ====== */
+
+// handle_expand.c (preparação para próximas semanas)
+char			*handle_expand(t_shell *shell, char *input, int i);
+int				prcs_expansion(t_shell *shell, char **str, char *input, int i);
+int				expand_unquoted(t_shell *shell, char **str, char *input, int i);
+int				expand_quoted(t_shell *shell, char **str, char *input, int i);
+int				expand_single(t_shell *shell, char **str, char *input, int i);
+
+// handle_expand_utils.c (preparação para próximas semanas)
+char			*ft_strjoin_char(char *str, char c);
+int				ft_flag(char c, int *i, bool flag);
+t_token			*create_token(t_shell *shell, char *str);
 
 #endif

@@ -121,3 +121,23 @@ void	ft_free_array(char **array)
 	}
 	free(array);
 }
+
+int	ft_arrlen(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr && arr[i])
+		i++;
+	return (i);
+}
+
+int	ft_flag(char c, int *i, bool flag)
+{
+	if (c == '"')
+	{
+		*i = *i + 1;
+		return (!flag);
+	}
+	return (flag);
+}
