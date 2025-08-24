@@ -10,7 +10,8 @@
         "types.h": "c",
         "stddef.h": "c",
         "builtins.h": "c",
-        "limits.h": "c"
+        "limits.h": "c",
+        "logic_tree.h": "c"
     },
     "makefile.configureOnOpen": false
 }

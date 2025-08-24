@@ -58,5 +58,5 @@ bool	handle_redir_error(char *str, int *i, int redir_len);
 bool	syntax_error_msg(char *str);
 int		exit_code(int value);
 bool	ft_ismeta(char *str, int i);
-
+char	*itoa_exit(t_shell *shell, char **str);
 #endif
