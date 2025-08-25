@@ -11,8 +11,16 @@
 /* ************************************************************************** */
 
 #include <minishell.h>
-#include <../libft/libft.h>
 
+/**
+ * env_arr - Converte lista de ambiente para array
+ * @shell: estrutura principal do shell
+ * 
+ * Converte a lista ligada de variáveis de ambiente
+ * em um array de strings para usar com execve.
+ * 
+ * Return: array de strings terminado em NULL
+ */
 char	**env_arr(t_shell *shell)
 {
 	t_list	*envp_list;
@@ -38,42 +46,12 @@ char	**env_arr(t_shell *shell)
 	return (env_arr);
 }
 
-t_list	*path_list(t_shell *shell, char **envp)
-{
-	t_list	*path_list;
-	char	*path;
-	int		i;
-
-	(void)envp;
-	path_list = NULL;
-	path = sh_get_env(shell->envp, "PATH");
-	if (path == NULL)
-		return (NULL);
-	i = 0;
-	while (path[i])
-	{
-		i = get_path(shell, &path_list, path, i);
-	}
-	return (path_list);
-}
-
-int	get_path(t_shell *shell, t_list **path_list, char *path, int i)
-{
-	char	*new_path;
-	int		start;
-
-	start = i;
-	while (path[i] && path[i] != ':')
-		i++;
-	new_path = ft_substr(path, start, i - start);
-	if (!new_path)
-		exit_failure(shell, "get_path");
-	ft_lstadd_back(path_list, ft_lstnew(new_path));
-	if (path[i] == ':')
-		i++;
-	return (i);
-}
-
+/**
+ * print_env_lst - Imprime lista de variáveis de ambiente
+ * @lst: lista de variáveis de ambiente
+ * 
+ * Imprime todas as variáveis de ambiente no formato NAME=value.
+ */
 void	print_env_lst(t_list *lst)
 {
 	t_env	*env_var;
@@ -90,6 +68,13 @@ void	print_env_lst(t_list *lst)
 	}
 }
 
+/**
+ * free_env_lst - Libera lista de variáveis de ambiente
+ * @envp: lista de variáveis de ambiente
+ * 
+ * Libera completamente a lista de variáveis de ambiente,
+ * incluindo todos os strings e nós.
+ */
 void	free_env_lst(t_list *envp)
 {
 	t_list	*tmp;
