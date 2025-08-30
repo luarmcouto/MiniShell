@@ -181,9 +181,9 @@ void	execute_cmd_node(t_shell *shell, t_exec *cmd_node)
 	// check_wildcards(shell, cmd_node);
 	
 	// Verifica se é builtin
-	if (cmd_node->command && is_builtin(cmd_node->command))
+	if (cmd_node->argv && cmd_node->argv[0] && is_builtin(cmd_node->argv[0]))
 	{
-		ret_code = exec_builtin(shell, cmd_node);
+		ret_code = handle_builtins(shell, cmd_node);
 		cleanup_execution(shell, cmd_node);
 		exit(ret_code);
 	}
