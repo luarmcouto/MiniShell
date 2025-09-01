@@ -93,7 +93,7 @@ void	execute_tree(t_shell *shell, void *tree_root)
 	else if (node->type == N_ANDIF || node->type == N_OR)
 	{
 		logic_tree_exec(shell, tree_root);
-		free_env_lst(shell->envp);
+		free_env_list(shell->envp);
 		free_shell(shell);
 	}
 }
@@ -150,7 +150,7 @@ void	execute_pipe_node(t_shell *shell, t_pipe *pipe_node)
 	close(pipefd[1]);
 	wait_for_processes(left_pid, right_pid, &final_status);
 	//exit_status(final_status);
-	free_env_lst(shell->envp);
+	free_env_list(shell->envp);
 	free_shell(shell);
 	exit(exit_code(-1));
 }
@@ -183,9 +183,10 @@ void	execute_cmd_node(t_shell *shell, t_exec *cmd_node)
 	// Verifica se é builtin
 	if (cmd_node->argv && cmd_node->argv[0] && is_builtin(cmd_node->argv[0]))
 	{
-		ret_code = handle_builtins(shell, cmd_node);
-		cleanup_execution(shell, cmd_node);
-		exit(ret_code);
+		ret_code = process_builtins(shell, cmd_node);
+		// cleanup_execution(shell, cmd_node);
+		exit_code(ret_code); 
+		return ; 
 	}
 	
 	// TODO: Configurar sinais para processo filho
@@ -202,7 +203,7 @@ void	execute_cmd_node(t_shell *shell, t_exec *cmd_node)
 	// Executa comando
 	if (execve(shell->cmd_path, cmd_node->argv, shell->envp_arr) < 0)
 	{
-		free_env_lst(shell->envp);
+		free_env_list(shell->envp);
 		if (cmd_node->argv && cmd_node->argv[0])
 		{
 			// TODO: Implementar free_expand()

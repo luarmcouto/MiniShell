@@ -3,76 +3,94 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/25 20:45:07 by iwietzke          #+#    #+#             */
-/*   Updated: 2025/08/25 20:45:07 by iwietzke         ###   ########.fr       */
+/*   Created: 2025/08/10 08:00:00 by luarodri          #+#    #+#             */
+/*   Updated: 2025/08/10 08:00:00 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/**
- * get_cd_path - Determina o caminho para o comando cd
- * @shell: estrutura principal do shell
- * @arg: argumento passado ao cd
- * 
- * Determina qual caminho usar baseado no argumento:
- * - NULL ou vazio: usa variável HOME
- * - "-": usa variável OLDPWD e imprime o caminho
- * - qualquer outro: usa o argumento diretamente
- * 
- * Return: ponteiro para o caminho ou NULL em erro
- */
-char	*get_cd_path(t_shell *shell, char *arg)
+int	builtin_cd(t_shell *shell_data, t_exec *cmd_node)
 {
-	char	*home;
-	char	*oldpwd;
+	char	*target_path;
+	int		arg_count;
 
-	if (!arg)
+	arg_count = 0;
+	while (cmd_node->argv[arg_count])
+		arg_count++;
+	if (arg_count > 2)
+		return (display_cd_error(NULL, "too many arguments"));
+	target_path = determine_cd_path(shell_data, cmd_node->argv[1]);
+	if (!target_path)
 	{
-		home = sh_get_env(shell->envp, "HOME");
-		if (!home)
-			return (print_cd_error(NULL, "HOME not set"), NULL);
-		return (home);
+		return (1);
 	}
-	if (ft_strcmp(arg, "-") == 0)
+	if (chdir(target_path) != 0)
 	{
-		oldpwd = sh_get_env(shell->envp, "OLDPWD");
-		if (!oldpwd)
-			return (print_cd_error(NULL, "OLDPWD not set"), NULL);
-		ft_putendl_fd(oldpwd, 1);
-		return (oldpwd);
+		return (handle_chdir_failure(target_path));
 	}
-	return (arg);
+	return (refresh_pwd_variables(shell_data));
 }
 
-/**
- * ft_cd - Implementa o comando cd
- * @shell: estrutura principal do shell
- * @exec_node: nó de execução com argumentos
- * 
- * Implementa mudança de diretório com validações:
- * - Aceita no máximo 2 argumentos (cd + caminho)
- * - Obtém caminho apropriado via get_cd_path
- * - Executa chdir() e atualiza variáveis PWD/OLDPWD
- * 
- * Return: 0 em sucesso, 1 em erro
- */
-int	ft_cd(t_shell *shell, t_exec *exec_node)
+char	*determine_cd_path(t_shell *shell_data, char *provided_arg)
 {
-	char	*path;
-	int		i;
+	char	*home_dir;
+	char	*prev_dir;
 
-	i = 0;
-	while (exec_node->argv[i])
-		i++;
-	if (i > 2)
-		return (print_cd_error(NULL, "too many arguments"));
-	path = get_cd_path(shell, exec_node->argv[1]);
-	if (!path)
-		return (1);
-	if (chdir(path) != 0)
-		return (handle_chdir_error(path));
-	return (update_pwd_vars(shell));
+	if (!provided_arg)
+	{
+		home_dir = get_shell_env(shell_data->envp, "HOME");
+		if (!home_dir)
+			return (display_cd_error(NULL, "HOME not set"), NULL);
+		return (home_dir);
+	}
+	if (ft_strcmp(provided_arg, "-") == 0)
+	{
+		prev_dir = get_shell_env(shell_data->envp, "OLDPWD");
+		if (!prev_dir)
+			return (display_cd_error(NULL, "OLDPWD not set"), NULL);
+		ft_putendl_fd(prev_dir, 1);
+		return (prev_dir);
+	}
+	return (provided_arg);
+}
+
+int	refresh_pwd_variables(t_shell *shell_data)
+{
+	char	*previous_pwd;
+	char	*current_path;
+
+	current_path = get_shell_env(shell_data->envp, "PWD");
+	if (current_path)
+		previous_pwd = ft_strdup(current_path);
+	else
+		previous_pwd = ft_strdup("");
+	if (!previous_pwd)
+		exit_failure(shell_data, "cd: oldpwd allocation");
+	return (update_new_pwd(shell_data, previous_pwd));
+}
+
+int	update_new_pwd(t_shell *shell_data, char *old_dir)
+{
+	char	*new_pwd;
+	char	*pwd_variable;
+	char	*oldpwd_variable;
+
+	new_pwd = getcwd(NULL, 0);
+	if (!new_pwd)
+		return (free(old_dir), display_cd_error(NULL,
+				"error retrieving current directory"));
+	pwd_variable = ft_strjoin("PWD=", new_pwd);
+	oldpwd_variable = ft_strjoin("OLDPWD=", old_dir);
+	if (!pwd_variable || !oldpwd_variable)
+		exit_failure(shell_data, "cd: var allocation");
+	export_variable(shell_data, pwd_variable);
+	export_variable(shell_data, oldpwd_variable);
+	free(new_pwd);
+	free(pwd_variable);
+	free(old_dir);
+	free(oldpwd_variable);
+	return (0);
 }

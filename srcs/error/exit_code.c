@@ -13,6 +13,7 @@
 // TODO: diminuir número de funções.
 
 #include <minishell.h>
+#include <builtins.h>
 
 /**
  * exit_code - Gestão global do código de saída
@@ -246,7 +247,7 @@ void	handle_ctrl_c_exit_code(void)
 
 void	exit_failure(t_shell *shell, char *function)
 {
-	free_env_lst(shell->envp);
+	free_env_list(shell->envp);
 	free_shell(shell);
 	ft_putstr_fd(RED"malloc error: "DEFAULT, 2);
 	ft_putendl_fd(function, 2);

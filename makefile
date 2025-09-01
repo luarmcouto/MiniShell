@@ -97,12 +97,14 @@ ${NAME}: ${OBJS} libft
 	@$(progress_bar)
 
 clean:
+	@clear
 	@printf "$(YELLOW)🧹 Cleaning object files...$(RESET)\n"
 	@${RM} ${OBJS}
 	@if [ -d ${LIBFTDIR} ]; then make -C ${LIBFTDIR} clean; fi
 	@printf "$(GREEN)✓ Clean completed.$(RESET)\n"
 
 fclean: clean
+	@clear
 	@printf "$(YELLOW)💥 Full clean with libft removal...$(RESET)\n"
 	@${RM} ${NAME}
 	@rm -rf ${LIBFTDIR}

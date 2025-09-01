@@ -21,13 +21,13 @@ void	update_shlvl(t_shell shell)
 	tmp = shell.envp;
 	while (tmp)
 	{
-		if (ft_strcmp(((t_env *)tmp->content)->value, "SHLVL=") == 0)
+		if (ft_strcmp(((t_env_var *)tmp->content)->value, "SHLVL=") == 0)
 		{
-			value = ft_atoi(((t_env *)tmp->content)->content);
+			value = ft_atoi(((t_env_var *)tmp->content)->content);
 			value++;
 			n_value = ft_itoa(value);
-			free(((t_env *)tmp->content)->content);
-			((t_env *)tmp->content)->content = n_value;
+			free(((t_env_var *)tmp->content)->content);
+			((t_env_var *)tmp->content)->content = n_value;
 		}
 		tmp = tmp->next;
 	}
@@ -39,9 +39,9 @@ int	main(int argc, char *argv[], char *envp[])
 	t_shell	shell;
 
 	check_args(argc, argv, envp);
-	env_list(&shell, envp);
+	create_env_list(&shell, envp);
 	update_shlvl(shell);
 	terminal(&shell, envp);
-	free_env_lst(shell.envp);
+	free_env_list(shell.envp);
 	return (0);
 }

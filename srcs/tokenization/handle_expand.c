@@ -87,7 +87,7 @@ int	expand_unquoted(t_shell *shell, char **str, char *input, int i)
 	var_name = ft_substr(input, start, i - start);
 	if (!var_name)
 		exit_failure(shell, "expand_unquoted");
-	var_value = sh_get_env(shell->envp, var_name);
+	var_value = get_shell_env(shell->envp, var_name);
 	free(var_name);
 	if (var_value)
 	{

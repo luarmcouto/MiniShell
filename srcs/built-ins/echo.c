@@ -3,87 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/25 20:44:05 by iwietzke          #+#    #+#             */
-/*   Updated: 2025/08/25 20:44:05 by iwietzke         ###   ########.fr       */
+/*   Created: 2025/08/10 08:00:00 by luarodri          #+#    #+#             */
+/*   Updated: 2025/08/10 08:00:00 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/**
- * echo_flag_n - Verifica se argumento é flag -n válida
- * @arg: argumento a ser verificado
- * 
- * Verifica se o argumento é uma flag -n válida.
- * Deve começar com '-' e conter apenas 'n' após o hífen.
- * 
- * Return: 1 se é flag -n válida, 0 caso contrário
- */
-int	echo_flag_n(char *arg)
+int	ft_putstr(char *str)
 {
 	int	i;
 
-	if (!arg || arg[0] != '-')
+	i = 0;
+	if (str == NULL)
+		return (write(1, "(null)", 6));
+	while (str[i])
+		write(1, &str[i++], 1);
+	return (i);
+}
+
+int	builtin_echo(t_exec *cmd_node)
+{
+	bool	add_newline;
+	int		arg_idx;
+
+	add_newline = true;
+	arg_idx = 1;
+	while (cmd_node->argv[arg_idx] && check_no_newline_flag(cmd_node->argv[arg_idx]))
+	{
+		add_newline = false;
+		arg_idx++;
+	}
+	print_echo_args(cmd_node->argv, arg_idx, add_newline);
+	return (0);
+}
+
+int	check_no_newline_flag(char *argument)
+{
+	int	i;
+
+	if (!argument || argument[0] != '-')
 		return (0);
 	i = 1;
-	while (arg[i])
+	while (argument[i])
 	{
-		if (arg[i] != 'n')
+		if (argument[i] != 'n')
 			return (0);
 		i++;
 	}
 	return (i > 1);
 }
 
-/**
- * echo_output - Imprime os argumentos do echo
- * @args: array de argumentos
- * @idx: índice inicial para impressão
- * @newline: se deve imprimir nova linha no final
- * 
- * Imprime todos os argumentos a partir do índice especificado,
- * separados por espaços. Se newline for true, adiciona \n no final.
- */
-void	echo_output(char **args, int idx, int newline)
+void	print_echo_args(char **arguments, int start_idx, int add_newline)
 {
 	unsigned int	i;
 
-	i = idx;
-	while (args[i])
+	i = start_idx;
+	while (arguments[i])
 	{
-		ft_putstr_fd(args[i], 1);
-		if (args[i + 1])
+		ft_putstr(arguments[i]);
+		if (arguments[i + 1])
 			write(1, " ", 1);
 		i++;
 	}
-	if (newline)
+	if (add_newline)
 		write(1, "\n", 1);
-}
-
-/**
- * ft_echo - Implementa o comando echo
- * @exec_node: nó de execução com argumentos
- * 
- * Implementa o comando echo com suporte à flag -n.
- * A flag -n suprime a nova linha no final.
- * Permite múltiplas flags -n consecutivas.
- * 
- * Return: sempre retorna 0 (sucesso)
- */
-int	ft_echo(t_exec *exec_node)
-{
-	bool	newline;
-	int		i;
-
-	newline = true;
-	i = 1;
-	while (exec_node->argv[i] && echo_flag_n(exec_node->argv[i]))
-	{
-		newline = false;
-		i++;
-	}
-	echo_output(exec_node->argv, i, newline);
-	return (0);
-}
+}	

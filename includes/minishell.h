@@ -35,11 +35,11 @@
 # include <input.h>
 # include <signal.h>
 # include <signals.h>
+# include <binary_tree.h>
 # include <builtins.h>
 # include <tokenization.h>
 # include <utils.h>
 # include <exec.h>
-# include <binary_tree.h>
 # include <logic_tree.h>
 
 

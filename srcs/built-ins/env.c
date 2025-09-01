@@ -5,87 +5,135 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/28 20:24:30 by luarodri          #+#    #+#             */
-/*   Updated: 2025/07/26 16:56:18 by luarodri         ###   ########.fr       */
+/*   Created: 2025/08/10 08:00:00 by luarodri          #+#    #+#             */
+/*   Updated: 2025/08/10 08:00:00 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-/**
- * env_arr - Converte lista de ambiente para array
- * @shell: estrutura principal do shell
- * 
- * Converte a lista ligada de variáveis de ambiente
- * em um array de strings para usar com execve.
- * 
- * Return: array de strings terminado em NULL
- */
-char	**env_arr(t_shell *shell)
+static char	*ft_strndup(const char *s, size_t n)
 {
-	t_list	*envp_list;
-	char	**env_arr;
-	int		i;
+	char			*res;
+	unsigned int	i;
 
-	envp_list = shell->envp;
-	i = ft_lstsize(envp_list);
-	env_arr = malloc(sizeof(char *) * (i + 1));
-	if (!env_arr)
-		exit_failure(shell, "env_arr");
 	i = 0;
-	while (envp_list)
+	res = malloc(sizeof(char) * (n + 1));
+	if (res == NULL)
+		return (NULL);
+	while (i < n)
 	{
-		env_arr[i] = ft_strjoin(((t_env *)envp_list->content)->value,
-				((t_env *)envp_list->content)->content);
-		if (!env_arr[i])
-			exit_failure(shell, "env_arr_1");
-		envp_list = envp_list->next;
+		res[i] = s[i];
 		i++;
 	}
-	env_arr[i] = NULL;
-	return (env_arr);
+	res[i] = '\0';
+	return (res);
 }
 
-/**
- * print_env_lst - Imprime lista de variáveis de ambiente
- * @lst: lista de variáveis de ambiente
- * 
- * Imprime todas as variáveis de ambiente no formato NAME=value.
- */
-void	print_env_lst(t_list *lst)
+char	*ft_strdup(const char *s)
 {
-	t_env	*env_var;
+	char	*dup;
+	size_t	i;
 
-	while (lst)
+	dup = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (i < ft_strlen(s))
 	{
-		env_var = (t_env *)lst->content;
-		if (env_var->content && ft_strchr(env_var->value, '='))
-		{
-			printf("%s", env_var->value);
-			printf("%s\n", env_var->content);
-		}
-		lst = lst->next;
+		dup[i] = s[i];
+		i++;
 	}
+	dup[i] = 0;
+	return (dup);
 }
 
-/**
- * free_env_lst - Libera lista de variáveis de ambiente
- * @envp: lista de variáveis de ambiente
- * 
- * Libera completamente a lista de variáveis de ambiente,
- * incluindo todos os strings e nós.
- */
-void	free_env_lst(t_list *envp)
+// Função básica para criar lista de ambiente
+t_list	*env_list(t_shell *shell_data, char **envp)
 {
-	t_list	*tmp;
+	t_list		*env_lst;
+	t_env_var	*env_node;
+	int			i;
 
-	while (envp)
+	env_lst = NULL;
+	i = 0;
+	while (envp[i])
 	{
-		tmp = envp->next;
-		free(((t_env *)envp->content)->value);
-		free(((t_env *)envp->content)->content);
-		free(envp->content);
-		free(envp);
-		envp = tmp;
+		env_node = create_env_node(shell_data, &envp[i]);
+		if (!env_node)
+			exit_failure(shell_data, "env_list: node creation failed");
+		ft_lstadd_back(&env_lst, ft_lstnew(env_node));
+		i++;
 	}
+	return (env_lst);
+}
+
+// Criar nó de ambiente
+t_env_var	*create_env_node(t_shell *shell_data, char **env_entry)
+{
+	t_env_var	*node;
+	char		*equals_pos;
+
+	node = malloc(sizeof(t_env_var));
+	if (!node)
+		return (NULL);
+	equals_pos = ft_strchr(*env_entry, '=');
+	if (equals_pos)
+	{
+		node->value = ft_strndup(*env_entry, equals_pos - *env_entry + 1);
+		node->content = ft_strdup(equals_pos + 1);
+	}
+	else
+	{
+		node->value = ft_strjoin(*env_entry, "=");
+		node->content = ft_strdup("");
+	}
+	node->is_export = true;
+	node->printed = false;
+	if (!node->value || !node->content)
+	{
+		free(node->value);
+		free(node->content);
+		free(node);
+		exit_failure(shell_data, "create_env_node: allocation failed");
+	}
+	return (node);
+}
+
+// Extrair valor da variável de ambiente
+char	*extract_value(t_shell *shell_data, char *env_str)
+{
+	char	*equals_pos;
+	char	*result;
+
+	equals_pos = ft_strchr(env_str, '=');
+	if (!equals_pos)
+		result = ft_strjoin(env_str, "=");
+	else
+		result = ft_strndup(env_str, equals_pos - env_str + 1);
+	if (!result)
+		exit_failure(shell_data, "extract_value: allocation failed");
+	return (result);
+}
+
+// Extrair conteúdo da variável de ambiente  
+char	*extract_content(t_shell *shell_data, char *env_str)
+{
+	char	*equals_pos;
+	char	*result;
+
+	equals_pos = ft_strchr(env_str, '=');
+	if (!equals_pos)
+		result = ft_strdup("");
+	else
+		result = ft_strdup(equals_pos + 1);
+	if (!result)
+		exit_failure(shell_data, "extract_content: allocation failed");
+	return (result);
+}
+
+// Função de compatibilidade para criar lista de ambiente
+t_list	*create_env_list(t_shell *shell_data, char **envp)
+{
+	return (env_list(shell_data, envp));
 }

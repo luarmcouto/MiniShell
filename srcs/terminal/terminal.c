@@ -40,7 +40,15 @@ void	terminal(t_shell *shell, char **envp)
 
 	// Processar entrada com lexer
 	lexer(shell, shell->trim_input);
+
+	// Construir árvore binária
+	shell->root = build_tree(shell, shell->token_lst);
+
+	// Executar a árvore
+	if (shell->root)
+		execute_tree(shell, shell->root);
 	
+	/*
 	// Debug avançado dos tokens
 	printf("\n🚀 === ADVANCED TOKEN ANALYSIS ===\n");
 	print_tokens(shell->token_lst);
@@ -56,6 +64,7 @@ void	terminal(t_shell *shell, char **envp)
 	
 	// TODO: Implementar sistema de processos na semana 3
 	// last_process(0);
+	*/
 	
 	free_shell(shell);
 	terminal(shell, envp);
