@@ -21,7 +21,6 @@ void	free_shell(t_shell *shell);
 void	prepare_shell(t_shell *shell, char **envp);
 void	execute_command(t_shell *shell, int *status);
 int		is_env_empty(t_shell *shell);
-void	free_shell(t_shell *shell);
 
 //terminal_utils.c
 void	shell_input(t_shell *shell);

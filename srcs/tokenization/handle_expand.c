@@ -70,24 +70,26 @@ int	prcs_expansion(t_shell *shell, char **str, char *input, int i)
 
 int	expand_unquoted(t_shell *shell, char **str, char *input, int i)
 {
-	const int		start = ++i;
-	char			*tmp;
-	char			*var_name;
-	char			*var_value;
+	int		start;
+	char	*tmp;
+	char	*var_name;
+	char	*var_value;
 
+	start = ++i;
 	while (input[i] && !ft_isspace(input[i])
 		&& (ft_isalnum(input[i]) || input[i] == '_')
 		&& !ft_ismeta(input, i))
 		i++;
-	if (input[i] == '?')
-	{
-		*str = itoa_exit(shell, str);
-		return (++i);
-	}
+	if (input[start - 1] == '$' && input[start] == '?')
+		return (*str = itoa_exit(shell, str), ++i);
+	
 	var_name = ft_substr(input, start, i - start);
 	if (!var_name)
 		exit_failure(shell, "expand_unquoted");
-	var_value = get_shell_env(shell->envp, var_name);
+	
+	// 🔧 CORREÇÃO: usar sh_get_env em vez de getenv  
+	var_value = sh_get_env(shell->envp, var_name);
+	
 	free(var_name);
 	if (var_value)
 	{
@@ -110,15 +112,15 @@ int	expand_quoted(t_shell *shell, char **str, char *input, int i)
 		&& (ft_isalnum(input[i]) || input[i] == '_')
 		&& input[i] != '"')
 		i++;
-	if (input[i] == '?')
-	{
-		*str = itoa_exit(shell, str);
-		return (++i);
-	}
+	if (input[start - 1] == '$' && input[start] == '?')
+		return (*str = itoa_exit(shell, str), ++i);
 	var_name = ft_substr(input, start, i - start);
 	if (!var_name)
-		exit_failure(shell, "expand_unquoted");
-	var_value = getenv(var_name);
+		exit_failure(shell, "expand_quoted");
+	
+	// 🔧 CORREÇÃO: usar sh_get_env em vez de getenv
+	var_value = sh_get_env(shell->envp, var_name);
+	
 	free(var_name);
 	if (var_value)
 	{
@@ -128,6 +130,7 @@ int	expand_quoted(t_shell *shell, char **str, char *input, int i)
 	}
 	return (i);
 }
+
 
 int	expand_single(t_shell *shell, char **str, char *input, int i)
 {

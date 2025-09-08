@@ -1,22 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_utils.c                                       :+:      :+:    :+:   */
+/*   env_utils_size.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 08:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/08 18:15:11 by luarodri         ###   ########.fr       */
+/*   Created: 2024/12/08 15:59:43 by luarodri          #+#    #+#             */
+/*   Updated: 2025/09/08 18:15:27 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static int	g_exit_code = 0;
-
-int	get_exit_code(int new_code)
+int	get_content_size(char *env_str)
 {
-	if (new_code >= 0)
-		g_exit_code = new_code;
-	return (g_exit_code);
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (env_str[i] && env_str[i] != '=')
+		i++;
+	i++;
+	while (env_str[j] && env_str[j] != '\0')
+		j++;
+	return (j - i);
+}
+
+int	get_value_size(char *env_str)
+{
+	int	i;
+
+	i = 0;
+	while (env_str[i] && env_str[i] != '=')
+		i++;
+	i++;
+	return (i);
 }

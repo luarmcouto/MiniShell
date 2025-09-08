@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 14:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/05 19:51:11 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:07:29 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,26 +86,19 @@ int	is_shell_builtin(t_exec *exec_node)
 int	execute_regular_builtin(t_shell *shell, t_exec *exec_node)
 {
 	char	*cmd;
-
+	
 	if (!exec_node || !exec_node->argv || !exec_node->argv[0])
 		return (1);
-
+	exec_node->argv = expand_argv(shell, exec_node->argv);
 	cmd = exec_node->argv[0];
-
 	if (ft_strcmp(cmd, "echo") == 0)
-		return (ft_echo(exec_node));
-	
+		return (ft_echo(exec_node));	
 	if (ft_strcmp(cmd, "pwd") == 0)
-		return (ft_pwd(), 0);
-	
+		return (ft_pwd(), 0);	
 	if (ft_strcmp(cmd, "env") == 0)
-		return (print_env_lst(shell->envp), 0);
-	
-	// Para export sem argumentos (só lista variáveis)
+		return (print_env_lst(shell->envp), 0);	
 	if (ft_strcmp(cmd, "export") == 0 && !exec_node->argv[1])
-		return (ft_export(shell, exec_node->argv), 0);
-
-	// Se chegou até aqui, comando não reconhecido
+		return (builtin_export(shell, exec_node->argv), 0);
 	return (1);
 }
 
@@ -137,13 +130,13 @@ int	execute_shell_builtin(t_shell *shell, t_exec *exec_node)
 
 	if (ft_strcmp(cmd, "export") == 0)
 	{
-		ft_export(shell, exec_node->argv);
+		builtin_export(shell, exec_node->argv);
 		return (exit_code(-1));  // Retorna o exit code atual
 	}
 
 	if (ft_strcmp(cmd, "unset") == 0)
 	{
-		ft_unset(shell, exec_node->argv);
+		builtin_unset(shell, exec_node->argv);
 		return (0);
 	}
 

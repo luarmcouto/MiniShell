@@ -33,7 +33,7 @@ int			is_shell_builtin(t_exec *cmd_node);
 int			process_builtins(t_shell *shell_data, t_exec *cmd_node);
 
 // cd.c
-int	ft_cd(t_shell *shell, t_exec *exec_node);
+int			ft_cd(t_shell *shell, t_exec *exec_node);
 int			builtin_cd(t_shell *shell_data, t_exec *cmd_node);
 char		*determine_cd_path(t_shell *shell_data, char *provided_arg);
 int			refresh_pwd_variables(t_shell *shell_data);
@@ -42,6 +42,7 @@ int			update_new_pwd(t_shell *shell_data, char *old_dir);
 // cd_utils.c
 int			handle_chdir_failure(char *directory);
 int			display_cd_error(char *dir_path, char *error_msg);
+char		*sh_get_env(t_list *envp, const char *value);
 
 // echo.c
 int			ft_echo(t_exec *exec_node);
@@ -51,6 +52,8 @@ void		print_echo_args(char **arguments, int start_idx, int add_newline);
 
 // env.c
 char		**create_env_array(t_shell *shell_data);
+t_env_var	*create_new_env_var(t_shell *shell_data, const char *var_name, 
+			const char *var_value);
 t_list		*create_path_list(t_shell *shell_data, char **envp);
 int			get_path_var(t_shell *shell_data, t_list **path_list, char *path, int i);
 void		display_env_list(t_list *env_lst);
@@ -69,15 +72,16 @@ int			get_content_size(char *env_str);
 int			get_value_size(char *env_str);
 
 // exit.c
+void		ft_exit(t_shell *shell_data, t_exec *exec_node);
+void		exit_error(t_shell *shell_data, char **arg);
 int			builtin_exit(t_shell *shell_data, char **arguments);
 void		handle_exit_error(t_shell *shell_data, char **arguments);
 int			is_number_string(char *str);
 void		exit_with_args(void);
 int			get_exit_code(int new_code);
 
-
 // export.c
-int		builtin_export(t_shell *shell_data, char **arguments);
+int			builtin_export(t_shell *shell_data, char **arguments);
 int			export_variable(t_shell *shell_data, const char *arg_str);
 char		*build_value(t_shell *shell_data, const char *arg_str, char *equal_pos);
 void		modify_existing_var(t_env_var *env_variable, t_env_var *new_variable);
@@ -94,6 +98,8 @@ void		display_variable(t_env_var *env_var);
 // export_utils2.c
 int			update_env_variable(t_shell *shell_data, const char *var_name,
 								const char *var_value);
+int			handle_export_variable(t_shell *shell_data, const char *arg_str, 
+								char *equal_pos, char *plus_pos);
 void		modify_existing_var(t_env_var *env_variable, t_env_var *new_variable);
 
 // pwd.c
@@ -102,7 +108,7 @@ void		builtin_pwd(void);
 int			validate_pwd(t_exec *cmd_node);
 
 // unset.c
-int		builtin_unset(t_shell *shell_data, char **arguments);
+int			builtin_unset(t_shell *shell_data, char **arguments);
 void		remove_first_env_node(t_shell *shell_data, t_list *current);
 void		remove_env_node(t_list *previous);
 int			check_first_env_node(t_shell *shell_data, const char *variable_name);
@@ -114,5 +120,11 @@ void		display_invalid_identifier(char *arg_str, char *cmd_str);
 void		remove_environment_var(t_shell *shell_data, const char *variable_name);
 int			is_exact_variable(t_env_var *env_variable, const char *variable_name);
 int			unset_variable(t_shell *shell_data, const char *var_name);
+
+// utility functions
+long long	ft_atoll(const char *str);
+void		free_string_array(char **array);
+
+char	*simple_get_env(t_list *envp, const char *var_name);
 
 #endif

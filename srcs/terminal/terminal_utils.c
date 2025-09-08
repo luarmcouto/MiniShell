@@ -53,20 +53,3 @@ void	reset_shell(t_shell *shell)
 	shell->cwd = NULL;
 	shell->exit_code = 0;
 }
-
-void	free_shell(t_shell *shell)
-{
-	if (shell->token_lst)
-		ft_lstclear(&shell->token_lst, del_token);
-	if (shell->input)
-		free(shell->input);
-	if (shell->trim_input)
-		free(shell->trim_input);
-	if (shell->root)
-		free_bst(shell->root);
-	if (shell->cmd_path)
-		free(shell->cmd_path);
-	if (shell->cwd)
-		free(shell->cwd);
-	reset_shell(shell);
-}

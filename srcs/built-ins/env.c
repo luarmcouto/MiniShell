@@ -5,135 +5,101 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 08:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/08/10 08:00:00 by luarodri         ###   ########.fr       */
+/*   Created: 2024/12/08 20:24:30 by luarodri          #+#    #+#             */
+/*   Updated: 2024/12/08 20:24:30 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-static char	*ft_strndup(const char *s, size_t n)
+char	**create_env_array(t_shell *shell_data)
 {
-	char			*res;
-	unsigned int	i;
+	t_list	*envp_list;
+	char	**env_array;
+	int		i;
 
+	envp_list = shell_data->envp;
+	i = ft_lstsize(envp_list);
+	env_array = malloc(sizeof(char *) * (i + 1));
+	if (!env_array)
+		exit_failure(shell_data, "create_env_array");
 	i = 0;
-	res = malloc(sizeof(char) * (n + 1));
-	if (res == NULL)
-		return (NULL);
-	while (i < n)
+	while (envp_list)
 	{
-		res[i] = s[i];
+		env_array[i] = ft_strjoin(((t_env_var *)envp_list->content)->value,
+				((t_env_var *)envp_list->content)->content);
+		if (!env_array[i])
+			exit_failure(shell_data, "create_env_array");
+		envp_list = envp_list->next;
 		i++;
 	}
-	res[i] = '\0';
-	return (res);
+	env_array[i] = NULL;
+	return (env_array);
 }
 
-char	*ft_strdup(const char *s)
+t_list	*create_path_list(t_shell *shell_data, char **envp)
 {
-	char	*dup;
-	size_t	i;
+	t_list	*path_list;
+	char	*path;
+	int		i;
 
-	dup = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (!dup)
+	(void)envp;
+	path_list = NULL;
+	path = get_shell_env(shell_data->envp, "PATH");
+	if (path == NULL)
 		return (NULL);
 	i = 0;
-	while (i < ft_strlen(s))
+	while (path[i])
 	{
-		dup[i] = s[i];
+		i = get_path_var(shell_data, &path_list, path, i);
+	}
+	return (path_list);
+}
+
+int	get_path_var(t_shell *shell_data, t_list **path_list, char *path, int i)
+{
+	char	*new_path;
+	int		start;
+
+	start = i;
+	while (path[i] && path[i] != ':')
 		i++;
-	}
-	dup[i] = 0;
-	return (dup);
-}
-
-// Função básica para criar lista de ambiente
-t_list	*env_list(t_shell *shell_data, char **envp)
-{
-	t_list		*env_lst;
-	t_env_var	*env_node;
-	int			i;
-
-	env_lst = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		env_node = create_env_node(shell_data, &envp[i]);
-		if (!env_node)
-			exit_failure(shell_data, "env_list: node creation failed");
-		ft_lstadd_back(&env_lst, ft_lstnew(env_node));
+	new_path = ft_substr(path, start, i - start);
+	if (!new_path)
+		exit_failure(shell_data, "get_path_var");
+	ft_lstadd_back(path_list, ft_lstnew(new_path));
+	if (path[i] == ':')
 		i++;
-	}
-	return (env_lst);
+	return (i);
 }
 
-// Criar nó de ambiente
-t_env_var	*create_env_node(t_shell *shell_data, char **env_entry)
+void	display_env_list(t_list *env_lst)
 {
-	t_env_var	*node;
-	char		*equals_pos;
+	t_env_var	*env_variable;
 
-	node = malloc(sizeof(t_env_var));
-	if (!node)
-		return (NULL);
-	equals_pos = ft_strchr(*env_entry, '=');
-	if (equals_pos)
+	while (env_lst)
 	{
-		node->value = ft_strndup(*env_entry, equals_pos - *env_entry + 1);
-		node->content = ft_strdup(equals_pos + 1);
+		env_variable = (t_env_var *)env_lst->content;
+		if (env_variable->content && ft_strchr(env_variable->value, '='))
+		{
+			printf("%s", env_variable->value);
+			printf("%s\n", env_variable->content);
+		}
+		env_lst = env_lst->next;
 	}
-	else
+}
+
+void	free_env_list(t_list *envp)
+{
+	t_list	*temp;
+
+	while (envp)
 	{
-		node->value = ft_strjoin(*env_entry, "=");
-		node->content = ft_strdup("");
+		temp = envp->next;
+		free(((t_env_var *)envp->content)->value);
+		free(((t_env_var *)envp->content)->content);
+		free(envp->content);
+		free(envp);
+		envp = temp;
 	}
-	node->is_export = true;
-	node->printed = false;
-	if (!node->value || !node->content)
-	{
-		free(node->value);
-		free(node->content);
-		free(node);
-		exit_failure(shell_data, "create_env_node: allocation failed");
-	}
-	return (node);
-}
-
-// Extrair valor da variável de ambiente
-char	*extract_value(t_shell *shell_data, char *env_str)
-{
-	char	*equals_pos;
-	char	*result;
-
-	equals_pos = ft_strchr(env_str, '=');
-	if (!equals_pos)
-		result = ft_strjoin(env_str, "=");
-	else
-		result = ft_strndup(env_str, equals_pos - env_str + 1);
-	if (!result)
-		exit_failure(shell_data, "extract_value: allocation failed");
-	return (result);
-}
-
-// Extrair conteúdo da variável de ambiente  
-char	*extract_content(t_shell *shell_data, char *env_str)
-{
-	char	*equals_pos;
-	char	*result;
-
-	equals_pos = ft_strchr(env_str, '=');
-	if (!equals_pos)
-		result = ft_strdup("");
-	else
-		result = ft_strdup(equals_pos + 1);
-	if (!result)
-		exit_failure(shell_data, "extract_content: allocation failed");
-	return (result);
-}
-
-// Função de compatibilidade para criar lista de ambiente
-t_list	*create_env_list(t_shell *shell_data, char **envp)
-{
-	return (env_list(shell_data, envp));
 }

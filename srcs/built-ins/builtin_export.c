@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 14:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/05 19:02:12 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:09:46 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,6 @@ int	builtin_export(t_shell *shell_data, char **arguments)
 			exit_status = 1;
 		i++;
 	}
-
 	return (exit_status);
 }
 
@@ -338,31 +337,6 @@ int	unset_variable(t_shell *shell_data, const char *var_name)
 	return (0);
 }
 
-/**
- * builtin_unset - Implementa o comando unset
- */
-int	builtin_unset(t_shell *shell_data, char **arguments)
-{
-	int	i;
-	int	exit_status;
-	int	result;
-
-	if (!arguments[1])
-		return (0);
-
-	exit_status = 0;
-	i = 1;
-
-	while (arguments[i])
-	{
-		result = unset_variable(shell_data, arguments[i]);
-		if (result != 0)
-			exit_status = 1;
-		i++;
-	}
-
-	return (exit_status);
-}
 
 /* ************************************************************************** */
 /*                                  EXIT                                     */
@@ -371,7 +345,7 @@ int	builtin_unset(t_shell *shell_data, char **arguments)
 /**
  * ft_atoll - Converte string para long long
  */
-static long long	ft_atoll(const char *str)
+long long	ft_atoll(const char *str)
 {
 	long long	result;
 	int			sign;

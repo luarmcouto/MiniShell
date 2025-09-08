@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 08:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/01 18:08:06 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:00:37 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,6 @@ int	is_parent_builtin(t_exec *exec_node)
 	return (is_shell_builtin(exec_node));
 }
 
-// Funções básicas de env (compatibilidade)
-void	print_env_lst(t_list *lst)
-{
-	display_env_list(lst);
-}
 
 void	free_env_lst(t_list *envp)
 {

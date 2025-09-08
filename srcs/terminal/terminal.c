@@ -69,3 +69,32 @@ void	terminal(t_shell *shell, char **envp)
 	free_shell(shell);
 	terminal(shell, envp);
 }
+
+void	free_shell(t_shell *shell)
+{
+	int		i;
+
+	ft_lstclear(&shell->token_lst, del_token);
+	i = 0;
+	if (shell->envp_arr)
+	{
+		while (shell->envp_arr[i])
+		{
+			free(shell->envp_arr[i]);
+			i++;
+		}
+		free(shell->envp_arr);
+	}
+	ft_lstclear(&shell->path, free);
+	if (shell->input)
+		free(shell->input);
+	if (shell->trim_input)
+		free(shell->trim_input);
+	if (shell->root)
+		ltree_free(shell->root);
+	if (shell->cmd_path)
+		free(shell->cmd_path);
+	if (shell->cwd)
+		free(shell->cwd);
+	reset_shell(shell);
+}

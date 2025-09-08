@@ -22,47 +22,32 @@
 char	**expand_argv(t_shell *shell, char **argv)
 {
 	char	**new_argv;
-	char	*expanded;
+	char	*expand;
 	int		i;
 	int		j;
 
-	if (!argv)
-		return (NULL);
-	
-	// Conta argumentos
 	i = 0;
+	new_argv = NULL;
 	while (argv && argv[i])
 		i++;
-	
-	// Aloca novo array
 	new_argv = ft_calloc(i + 1, sizeof(char *));
 	if (!new_argv)
 		exit_failure(shell, "expand_argv");
-	
-	// Expande cada argumento
 	i = 0;
 	j = 0;
 	while (argv && argv[i])
 	{
-		if (is_expandable(argv[i]))
-		{
-			expanded = handle_expand(shell, argv[i], 0);
-			if (expanded && ft_strlen(expanded) > 0)
-				new_argv[j++] = expanded;
-			else if (expanded)
-				free(expanded);
-		}
+		expand = handle_expand(shell, argv[i], 0);		
+		if (expand)
+			new_argv[j++] = expand;
 		else
-		{
-			new_argv[j++] = ft_strdup(argv[i]);
-		}
+			free(expand);
 		i++;
 	}
-	
-	// Libera array original (não libera strings pois são tokens)
 	free(argv);
 	return (new_argv);
 }
+
 
 /**
  * free_expand - Libera array de strings expandidas
