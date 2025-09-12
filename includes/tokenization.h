@@ -14,6 +14,7 @@
 # define TOKENIZATION_H
 
 # include <structs.h>
+# include <stdbool.h>
 
 typedef enum s_token_type
 {
@@ -47,7 +48,7 @@ typedef struct s_token
 /* ====== CORE TOKENIZATION ====== */
 
 // lexer.c
-void			lexer(t_shell *shell, char	*input);
+void			lexer(t_shell *shell, char *input);
 
 // create_token_lst.c
 void			tokenize_input(t_shell *shell, char *input);
@@ -67,56 +68,86 @@ int				handle_redir(t_shell *shell, char *input, int i);
 int				set_append(t_shell *shell, t_token *new_token, char *input, int i);
 int				set_heredoc(t_shell *shell, t_token *new_token, char *input, int i);
 int				set_simple_redir(t_shell *shell, t_token *new_token, char *input, int i);
+bool			validate_redir_syntax(t_shell *shell, char *input, int i);
 
 // handle_pipe.c
 int				handle_pipe(t_shell *shell, char *input, int i);
 bool			is_valid_pipe_context(t_shell *shell, char *input, int i);
 
-// ft_joinstrs.c
-int				join_strs(t_shell *shell, char **str, char *input, int i);
-int				handle_quoted_str(t_shell *shell, char **str, char *input, int i);
-int				handle_nonquoted_str(t_shell *shell, char **str, char *input, int i);
-char			*ft_strjoin_char(char *str, char c);
+// handle_andif.c
+int				handle_andif(t_shell *shell, char *input, int i);
+
+// handle_or.c
+int				handle_or(t_shell *shell, char *input, int i);
 
 // handle_parenthesis.c
 int				handle_parenthesis(t_shell *shell, char *input, int i);
-int				handle_closing(t_shell *shell, char *input, int i, bool valid);
-bool			validate_subs(char *subs);
-int				handle_opening(t_shell *shell, char *input, int i, bool valid);
-int				jump_spaces(char *input, int i);
-
-// handle_logic_operators.c (BONUS PREPARATION)
-int				handle_andif(t_shell *shell, char *input, int i);
-int				handle_or(t_shell *shell, char *input, int i);
-int				is_logical_operator(char *input, int i);
-bool			validate_logical_context(t_shell *shell, char *input, int i, int operator);
-
-/* ====== UTILITY FUNCTIONS ====== */
-
-// tokenize_utils.c
-bool			in_quotes(char *input, int i);
-int				set_simple(t_shell *shell, t_token *new_token, char *input, int i);
-bool			is_expandable(char *token);
-int				is_meta_operator(char *input, int i);
-int				skip_whitespace(char *input, int i);
-int				find_quote_end(char *input, int i);
-
-// tokenize_utils2.c
-int				check_balance(char *input, int i);
-int				set_hered(t_shell *shell, t_token *new_token, char *input, int i);
 
 /* ====== EXPANSION SYSTEM ====== */
 
-// handle_expand.c (preparação para próximas semanas)
+// expand_tokens.c
+void			expand_tokens(t_shell *shell);
+
+// handle_expand.c
 char			*handle_expand(t_shell *shell, char *input, int i);
 int				prcs_expansion(t_shell *shell, char **str, char *input, int i);
 int				expand_unquoted(t_shell *shell, char **str, char *input, int i);
 int				expand_quoted(t_shell *shell, char **str, char *input, int i);
-int				expand_single(t_shell *shell, char **str, char *input, int i);
 
-// handle_expand_utils.c (preparação para próximas semanas)
-char			*ft_strjoin_char(char *str, char c);
-int				ft_flag(char c, int *i, bool flag);
-t_token			*create_token(t_shell *shell, char *str);
+// handle_expand_utils.c
+char			*get_var_value(t_shell *shell, char *var_name);
+char			*expand_var_name(t_shell *shell, char *input, int *i);
+bool			is_valid_var_char(char c);
+int				skip_var_name(char *input, int i);
+
+/* ====== STRING MANIPULATION ====== */
+
+// ft_joinstrs.c
+int				join_strs(t_shell *shell, char **str, char *input, int i);
+int				h_quoted_str(t_shell *shell, char **str, char *input, int i);
+int				h_nonquoted_str(t_shell *shell, char **str, char *input, int i);
+
+/* ====== TOKEN UTILITIES ====== */
+
+// check_token_type.c
+t_token_type	token_type(char *value);
+bool			is_operator_token(t_token_type type);
+bool			is_redirect_token(t_token_type type);
+
+// tokenize_utils.c
+bool			is_special_char(char c);
+bool			is_quote_char(char c);
+int				skip_whitespace(char *input, int i);
+bool			check_token(t_list *token);
+
+// tokenize_utils2.c
+bool			is_valid_token_sequence(t_shell *shell, t_list *tokens);
+void			print_syntax_error(t_shell *shell, char *token);
+bool			validate_token_list(t_shell *shell, t_list *tokens);
+
+/* ====== VALIDATION ====== */
+
+char	*ft_strjoin_char(char *str, char c);
+
+// token_validation.c
+bool			validate_pipe_syntax(t_shell *shell, t_list *tokens);
+bool			validate_redirect_syntax(t_shell *shell, t_list *tokens);
+bool			validate_operator_syntax(t_shell *shell, t_list *tokens);
+bool			validate_parenthesis_syntax(t_shell *shell, t_list *tokens);
+
+/* ====== UTILITY MACROS ====== */
+
+# define MAX_TOKEN_LENGTH 4096
+# define MAX_VAR_NAME_LENGTH 256
+
+/* ====== TOKEN TYPE CHECKS ====== */
+
+# define IS_REDIRECT(type) ((type) == INFILE || (type) == OUTFILE || \
+                        (type) == APPEND || (type) == HEREDOC)
+
+# define IS_LOGICAL_OP(type) ((type) == AND_IF || (type) == OR)
+
+# define IS_OPERATOR(type) (IS_REDIRECT(type) || IS_LOGICAL_OP(type) || \
+                        (type) == PIPE)
 
 #endif

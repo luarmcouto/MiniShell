@@ -30,24 +30,6 @@ bool	in_quotes(char *input, int i)
 }
 
 /**
- * set_append - Configura token de append (>>)
- * @shell: estrutura principal do shell
- * @new_token: token a ser configurado
- * @input: string de entrada
- * @i: posição atual
- * 
- * Return: nova posição após processar >>
- */
-int	set_append(t_shell *shell, t_token *new_token, char *input, int i)
-{
-	new_token->value = ft_substr(input, i, 2);
-	if (!new_token->value)
-		exit_failure(shell, "set_append");
-	new_token->type = APPEND;
-	return (i + 2);
-}
-
-/**
  * set_simple - Configura token de redirecionamento simples (< ou >)
  * @shell: estrutura principal do shell
  * @new_token: token a ser configurado

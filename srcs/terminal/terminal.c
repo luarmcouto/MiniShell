@@ -46,7 +46,7 @@ void	terminal(t_shell *shell, char **envp)
 
 	// Executar a árvore
 	if (shell->root)
-		execute_tree(shell, shell->root);
+		exec_tree(shell, shell->root);
 	
 	/*
 	// Debug avançado dos tokens

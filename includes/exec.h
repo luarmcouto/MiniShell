@@ -14,78 +14,66 @@
 # define EXEC_H
 
 # include <structs.h>
-# include <binary_tree.h>
-# include <builtins.h>
+# include <heredoc.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <unistd.h>
 
-// Declarações das funções que estão faltando (estão implementadas em builtins_utils.c)
-int		is_builtin(const char *command);
-int		exec_builtin(t_shell *shell, t_exec *exec_node);
+/* ====== EXECUTION CORE ====== */
 
 // exec_tree.c
-void	start_execution(t_shell *shell, void *tree_root);
-void	execute_tree(t_shell *shell, void *tree_root);
-void	execute_pipe_node(t_shell *shell, t_pipe *pipe_node);
-void	execute_cmd_node(t_shell *shell, t_exec *cmd_node);
-void	logic_tree_exec(t_shell *shell, void *tree_root);
-
-// Manter compatibilidade com funções existentes
+void	lexec_tree(t_shell *shell, void *root);
 void	exec_tree(t_shell *shell, void *root);
 void	exec_pipe(t_shell *shell, t_pipe *pipe_node);
-void	exec_node(t_shell *shell, t_exec *exec_node);
-void	lexec_tree(t_shell *shell, void *root);
+void	exec_node(t_shell *shell, t_exec *exec_node);  // CORRIGIDO: void em vez de void*
 
 // exec_utils.c
-char	*resolve_command_path(t_shell *shell, t_list *path_lst, char *command);
-char	*find_cmd_path(t_shell *shell, t_list *path_lst, char *command);
-void	cleanup_execution(t_shell *shell, t_exec *cmd_node);
-void	exec_free(t_shell *shell, t_exec *cmd_node);
-int		validate_command_access(t_shell *shell, char *cmd_path);
-char	*build_full_path(char *directory, char *command);
+char	*find_cmd_path(t_shell *shell, t_list *path_list, char *command);
+void	exec_free(t_shell *shell, t_exec *exec_node);
 
-// pids_utils.c
-void	handle_left_process(t_shell *shell, int pipefd[], t_pipe *pipe_node);
-void	handle_right_process(t_shell *shell, int pipefd[], t_pipe *pipe_node);
-void	handle_pid1(t_shell *shell, int pipefd[], t_pipe *pipe_node);
-void	handle_pid2(t_shell *shell, int pipefd[], t_pipe *pipe_node);
-void	wait_for_processes(pid_t pid1, pid_t pid2, int *final_status);
-void	setup_pipe_fds(int pipefd[]);
-
-// exec_stubs.c - Stubs temporários (serão movidos para módulos apropriados)
-void	execute_processes(t_shell *shell, void *root);
+// exec_expand.c
 char	**expand_argv(t_shell *shell, char **argv);
 void	free_expand(char **argv);
-void	check_files_order(t_shell *shell, t_exec *exec_node);
-void	check_wildcards(t_shell *shell, t_exec *exec_node);
-void	set_fork1_signal(void);
-void	set_main_signals(void);
-void	handle_heredoc(t_shell *shell, void *root);
-void	is_directory(t_shell *shell, char **argv);
-void	exit_failure(t_shell *shell, char *function);
-void	exec_failure(t_shell *shell, char *cmd_path);
-void	start_execution(t_shell *shell, void *tree_root);
-void	execute_tree(t_shell *shell, void *tree_root);
-void	execute_pipe_node(t_shell *shell, t_pipe *pipe_node);
-void	execute_cmd_node(t_shell *shell, t_exec *cmd_node);
-void	logic_tree_exec(t_shell *shell, void *tree_root);
+char	*f(t_shell *shell, char *input);
 
-// Manter compatibilidade com funções existentes
-void	exec_tree(t_shell *shell, void *root);
-void	exec_pipe(t_shell *shell, t_pipe *pipe_node);
-void	exec_node(t_shell *shell, t_exec *exec_node);
-void	lexec_tree(t_shell *shell, void *root);
-
-// exec_utils.c
-char	*resolve_command_path(t_shell *shell, t_list *path_lst, char *command);
-char	*find_cmd_path(t_shell *shell, t_list *path_lst, char *command);
-void	cleanup_execution(t_shell *shell, t_exec *cmd_node);
-void	exec_free(t_shell *shell, t_exec *cmd_node);
-int		validate_command_access(t_shell *shell, char *cmd_path);
-char	*build_full_path(char *directory, char *command);
+/* ====== PROCESS MANAGEMENT ====== */
 
 // pids_utils.c
-void	handle_left_process(t_shell *shell, int pipefd[], t_pipe *pipe_node);
-void	handle_right_process(t_shell *shell, int pipefd[], t_pipe *pipe_node);
-void	wait_for_processes(pid_t pid1, pid_t pid2, int *final_status);
-void	setup_pipe_fds(int pipefd[]);
+void	handle_pid1(t_shell *shell, int pipefd[], t_pipe *pipe_node);
+void	handle_pid2(t_shell *shell, int pipefd[], t_pipe *pipe_node);
+
+/* ====== REDIRECTION SYSTEM ====== */
+
+// redirects.c (NEW - sistema completo)
+void	setup_redirections(t_shell *shell, t_exec *exec_node);
+void	handle_input_redirections(t_shell *shell, t_list *infiles);
+void	handle_output_redirections(t_shell *shell, t_list *outfiles);
+int		open_input_file(t_shell *shell, char *filename);
+int		open_heredoc_file(t_shell *shell, t_inf *infile);
+void	print_file_error(t_shell *shell, char *filename, char *error_msg);
+
+// redirects_utils.c (NEW - utilitários)
+char	*expand_filename(t_shell *shell, char *filename);
+void	backup_std_fds(int backup_fds[3]);
+void	restore_std_fds(int backup_fds[3]);
+bool	validate_filename(t_shell *shell, char *filename);
+bool	check_file_permissions(t_shell *shell, char *filename, int mode);
+void	clean_temp_files(t_exec *exec_node);
+void	count_redirections(t_exec *exec_node, int *input_count, int *output_count);
+
+/* ====== LEGACY FUNCTIONS (compatibilidade) ====== */
+
+// redirects.c (EXISTING - manter compatibilidade)
+void	check_files_order(t_shell *shell, t_exec *exec_node);
+void	handle_infiles(t_shell *shell, t_list *infiles, int pos);
+void	handle_outfiles(t_shell *s, t_list *outfiles, int pos);
+void	dup_file2(char *name, int fd);
+void	dup_file(char *name, int fd);
+
+/* ====== UTILITY MACROS ====== */
+
+# define MAX_OPEN_FILES 1024
+# define DEFAULT_FILE_PERMISSIONS 0644
+# define BACKUP_FD_COUNT 3
 
 #endif

@@ -32,7 +32,7 @@ void	*build_tree(t_shell *shell, t_list *token_list)
 	root = NULL;
 	
 	// Processa todos os tokens, criando nós da árvore
-	while (check_token(tmp))
+	while (check_tree_token(tmp))
 	{
 		root = insert_node(shell, root, tmp);
 		

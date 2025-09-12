@@ -38,7 +38,7 @@ char	**get_argv(t_shell *shell, t_list *t_lst)
 	
 	while (t_lst && ((t_token *)t_lst->content)->type != PIPE && i < argc)
 	{
-		if (!check_token(t_lst))
+		if (!check_tree_token(t_lst))
 			break ;
 		
 		if (t_lst && ((t_token *)t_lst->content)->type == WORD)
@@ -47,7 +47,7 @@ char	**get_argv(t_shell *shell, t_list *t_lst)
 			continue ;
 		}
 		
-		if (!check_token(t_lst->next))
+		if (!check_tree_token(t_lst->next))
 			break ;
 		
 		t_lst = t_lst->next->next; // Pula redirecionamento + seu alvo
@@ -96,7 +96,7 @@ t_list	*get_infiles(t_shell *shell, t_list *tkn_lst, t_list **infiles)
 		}
 		
 		tkn_lst = tkn_lst->next;
-		if (!check_token(tkn_lst))
+		if (!check_tree_token(tkn_lst))
 			break ;
 	}
 	return (tkn_lst);
@@ -141,7 +141,7 @@ t_list	*get_outfiles(t_shell *shell, t_list *tkn_lst, t_list **outfiles)
 		}
 		
 		tkn_lst = tkn_lst->next;
-		if (!check_token(tkn_lst))
+		if (!check_tree_token(tkn_lst))
 			break ;
 	}
 	return (tkn_lst);
@@ -223,7 +223,7 @@ int	count_args(t_list *tkn_lst)
 		}
 		
 		tkn_lst = check_w_args(tkn_lst, &args);
-		if (!check_token(tkn_lst))
+		if (!check_tree_token(tkn_lst))
 			break ;
 	}
 	return (args);

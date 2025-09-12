@@ -38,9 +38,6 @@ void	*create_subtree(t_shell *shell, t_list *token_lst);
 void	*create_and(t_shell *shell, void *left, void *right);
 void	*create_or(t_shell *shell, void *left, void *right);
 
-// build_ltree_utils.c
-int		check_token(t_list *node);
-
 // ltree_parenthesis.c
 t_list	*new_sublist(t_list *t_lst);
 void	clean_sublist(t_list *new);

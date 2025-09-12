@@ -90,6 +90,7 @@ t_list	*skip_if(t_list *tmp);
 t_list	*skip_else(t_list *tmp);
 t_list	*check_word(t_list **current, char **argv, int *i);
 t_list	*check_w_args(t_list *tkn_lst, int *args);
+bool    check_tree_token(t_list *node);
 
 /* ====== TREE MANAGEMENT ====== */
 

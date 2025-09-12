@@ -41,6 +41,7 @@
 # include <utils.h>
 # include <exec.h>
 # include <logic_tree.h>
+# include <errors.h>
 
 
 // MACROS

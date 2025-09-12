@@ -50,6 +50,18 @@ int	handle_redir(t_shell *shell, char *input, int i)
 }
 
 /**
+ * set_append - Configura token para append (>>)
+ */
+int	set_append(t_shell *shell, t_token *new_token, char *input, int i)
+{
+	new_token->value = ft_substr(input, i, 2);
+	if (!new_token->value)
+		exit_failure(shell, "set_append");
+	new_token->type = APPEND;
+	return (i + 2);
+}
+
+/**
  * set_heredoc - Configura token para heredoc (<<)
  */
 int	set_heredoc(t_shell *shell, t_token *new_token, char *input, int i)
@@ -76,4 +88,39 @@ int	set_simple_redir(t_shell *shell, t_token *new_token, char *input, int i)
 		new_token->type = OUTFILE;
 	
 	return (i + 1);
+}
+
+/**
+ * validate_redir_syntax - Valida sintaxe dos redirecionamentos
+ * @shell: estrutura principal
+ * @input: string de entrada
+ * @i: posição atual
+ * 
+ * Verifica se há arquivo após o operador de redirecionamento
+ * Return: true se válido, false caso contrário
+ */
+bool	validate_redir_syntax(t_shell *shell, char *input, int i)
+{
+	// Pula o operador de redirecionamento
+	if (input[i] == '>' || input[i] == '<')
+	{
+		i++;
+		if (input[i] == '>' || input[i] == '<')
+			i++;
+	}
+	
+	// Pula espaços
+	while (input[i] && ft_isspace(input[i]))
+		i++;
+	
+	// Verifica se há um nome de arquivo válido
+	if (!input[i] || input[i] == '|' || input[i] == '>' || input[i] == '<' 
+		|| input[i] == '&')
+	{
+		shell->exit_code = 2;
+		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+		return (false);
+	}
+	
+	return (true);
 }
