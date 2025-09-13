@@ -28,17 +28,17 @@ int	join_strs(t_shell *shell, char **str, char *input, int i)
 {
 	if (ft_isquote(input[i]))
 	{
-		i = handle_quoted_str(shell, str, input, i);
+		i = h_quoted_str(shell, str, input, i);
 	}
 	else
 	{
-		i = handle_nonquoted_str(shell, str, input, i);
+		i = h_nonquoted_str(shell, str, input, i);
 	}
 	return (i);
 }
 
 /**
- * handle_quoted_str - Processa strings dentro de aspas
+ * h_quoted_str - Processa strings dentro de aspas
  * @shell: estrutura principal do shell
  * @str: ponteiro para string resultado
  * @input: string de entrada
@@ -49,7 +49,7 @@ int	join_strs(t_shell *shell, char **str, char *input, int i)
  * 
  * Return: nova posição no input após processar a string
  */
-int	handle_quoted_str(t_shell *shell, char **str, char *input, int i)
+int	h_quoted_str(t_shell *shell, char **str, char *input, int i)
 {
 	char	*join;
 	char	quote;
@@ -70,7 +70,7 @@ int	handle_quoted_str(t_shell *shell, char **str, char *input, int i)
 	// Extrai substring incluindo as aspas
 	join = ft_substr(input, start, i - start);
 	if (!join)
-		exit_failure(shell, "handle_quoted_str");
+		exit_failure(shell, "h_quoted_str");
 	
 	// Junta à string resultado
 	tmp = *str;
@@ -79,13 +79,13 @@ int	handle_quoted_str(t_shell *shell, char **str, char *input, int i)
 	free(join);
 	
 	if (!*str)
-		exit_failure(shell, "handle_quoted_str_join");
+		exit_failure(shell, "h_quoted_str_join");
 	
 	return (i);
 }
 
 /**
- * handle_nonquoted_str - Processa strings sem aspas
+ * h_nonquoted_str - Processa strings sem aspas
  * @shell: estrutura principal do shell
  * @str: ponteiro para string resultado
  * @input: string de entrada
@@ -98,7 +98,7 @@ int	handle_quoted_str(t_shell *shell, char **str, char *input, int i)
  * 
  * Return: nova posição no input após processar a string
  */
-int	handle_nonquoted_str(t_shell *shell, char **str, char *input, int i)
+int	h_nonquoted_str(t_shell *shell, char **str, char *input, int i)
 {
 	char	*join;
 	int		start;
@@ -114,7 +114,7 @@ int	handle_nonquoted_str(t_shell *shell, char **str, char *input, int i)
 	// Extrai substring
 	join = ft_substr(input, start, i - start);
 	if (!join)
-		exit_failure(shell, "handle_nonquoted_str");
+		exit_failure(shell, "h_nonquoted_str");
 	
 	// Junta à string resultado
 	tmp = *str;
@@ -123,7 +123,7 @@ int	handle_nonquoted_str(t_shell *shell, char **str, char *input, int i)
 	free(join);
 	
 	if (!*str)
-		exit_failure(shell, "handle_nonquoted_str_join");
+		exit_failure(shell, "h_nonquoted_str_join");
 	
 	return (i);
 }

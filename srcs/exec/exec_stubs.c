@@ -31,7 +31,7 @@ void	execute_processes(t_shell *shell, void *root)
 {
 	// Por enquanto, executa a árvore diretamente sem as funcionalidades
 	// extras como sinais e heredoc
-	execute_tree(shell, root);
+	exec_tree(shell, root);
 }
 
 /**

@@ -57,6 +57,9 @@ void	tokenize_input(t_shell *shell, char *input)
 		// Redirecionamentos (<, >, >>, <<)
 		else if (input[i] == '>' || input[i] == '<')
 			i = handle_redir(shell, input, i);
+		// Verifica se começa com aspas
+		else if (ft_isquote(input[i]))
+			i = handle_quotes(shell, input, i);
 		// Palavras, comandos e argumentos
 		else
 			i = handle_word_token(shell, input, i);
@@ -105,19 +108,6 @@ int	handle_word_token(t_shell *shell, char *input, int i)
 	return (i);
 }
 
-/**
- * handle_quotes - Processa especificamente tokens com aspas
- * @shell: estrutura principal do shell
- * @input: string de entrada
- * @i: posição atual na string
- * 
- * Função especializada para processar strings que começam com aspas.
- * Define o estado do token baseado no tipo de aspas:
- * - IN_SQUOTES para aspas simples
- * - IN_DQUOTES para aspas duplas
- * 
- * Return: nova posição no input após processar as aspas
- */
 int	handle_quotes(t_shell *shell, char *input, int i)
 {
 	t_token		*new_token;
@@ -132,10 +122,27 @@ int	handle_quotes(t_shell *shell, char *input, int i)
 	if (!str)
 		exit_failure(shell, "handle_quotes_str");
 	
-	// Processa conteúdo incluindo aspas
-	while (input[i] && !ft_isspace(input[i]) && !ft_ismeta(input, i))
+	i++; // Pula aspa inicial
+	
+	// Processa conteúdo até encontrar aspa final
+	while (input[i] && input[i] != quote)
 	{
-		i = join_strs(shell, &str, input, i);
+		str = ft_strjoin_char(str, input[i]);
+		if (!str)
+			exit_failure(shell, "handle_quotes_join");
+		i++;
+	}
+	
+	// Verifica se encontrou aspa de fechamento
+	if (input[i] == quote)
+		i++; // Pula aspa final
+	else
+	{
+		// Erro: aspa não fechada
+		syntax_error_msg(SYNTAX_QUOTE);
+		free(str);
+		free(new_token);
+		return (i);
 	}
 	
 	new_token->value = str;

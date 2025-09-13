@@ -60,7 +60,7 @@ void	handle_left_process(t_shell *shell, int pipefd[], t_pipe *pipe_node)
 	close(pipefd[1]);
 	
 	// Executa comando esquerdo do pipe
-	execute_tree(shell, pipe_node->left);
+	exec_tree(shell, pipe_node->left);
 	
 	// Se chegou aqui, algo deu errado na execução
 	exit(EXIT_SUCCESS);
@@ -94,7 +94,7 @@ void	handle_right_process(t_shell *shell, int pipefd[], t_pipe *pipe_node)
 	close(pipefd[0]);
 	
 	// Executa comando direito do pipe
-	execute_tree(shell, pipe_node->right);
+	exec_tree(shell, pipe_node->right);
 	
 	// Se chegou aqui, algo deu errado na execução
 	exit(EXIT_SUCCESS);
