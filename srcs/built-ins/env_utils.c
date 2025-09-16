@@ -69,7 +69,7 @@ char	*extract_content(t_shell *shell_data, char *env_str)
 	return (content);
 }
 
-char	*get_shell_env(t_list *envp, const char *var_name)
+char	*get_shell_env(t_list *envp, const char *value)
 {
 	t_list		*current;
 	t_env_var	*env_entry;
@@ -78,7 +78,7 @@ char	*get_shell_env(t_list *envp, const char *var_name)
 	while (current)
 	{
 		env_entry = (t_env_var *)current->content;
-		if (is_exact_variable(env_entry, var_name))
+		if (is_exact_variable(env_entry, value))
 			return (env_entry->content);
 		current = current->next;
 	}

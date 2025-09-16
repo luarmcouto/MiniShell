@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	builtin_cd(t_shell *shell_data, t_exec *cmd_node)
+int	ft_cd(t_shell *shell_data, t_exec *cmd_node)
 {
 	char	*target_path;
 	int		arg_count;

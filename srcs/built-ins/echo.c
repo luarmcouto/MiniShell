@@ -24,7 +24,7 @@ int	ft_putstr(char *str)
 	return (i);
 }
 
-int	builtin_echo(t_exec *cmd_node)
+int	ft_echo(t_exec *cmd_node)
 {
 	bool	add_newline;
 	int		arg_idx;

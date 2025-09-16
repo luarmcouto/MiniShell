@@ -64,7 +64,6 @@ void	count_redirections(t_exec *exec_node, int *input_count, int *output_count);
 /* ====== LEGACY FUNCTIONS (compatibilidade) ====== */
 
 // redirects.c (EXISTING - manter compatibilidade)
-void	check_files_order(t_shell *shell, t_exec *exec_node);
 void	handle_infiles(t_shell *shell, t_list *infiles, int pos);
 void	handle_outfiles(t_shell *s, t_list *outfiles, int pos);
 void	dup_file2(char *name, int fd);

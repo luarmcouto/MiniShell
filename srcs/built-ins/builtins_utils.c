@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_placehonders.c                             :+:      :+:    :+:   */
+/*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/11 14:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/12 20:39:56 by iwietzke         ###   ########.fr       */
+/*   Created: 2025/09/16 19:15:33 by luarodri          #+#    #+#             */
+/*   Updated: 2025/09/16 19:17:56 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	is_builtin_command(const char *command)
 }
 
 /**
- * is_shell_builtin - Verifica se builtin deve rodar no processo pai
+ * is_parent_builtin - Verifica se builtin deve rodar no processo pai
  * @exec_node: nó de execução
  *
  * Builtins que modificam o ambiente do shell (cd, export, unset, exit)
@@ -45,7 +45,7 @@ int	is_builtin_command(const char *command)
  *
  * Return: 1 se deve rodar no processo pai, 0 caso contrário
  */
-int	is_shell_builtin(t_exec *exec_node)
+int	is_parent_builtin(t_exec *exec_node)
 {
 	char	*cmd;
 	
@@ -67,13 +67,13 @@ int	is_shell_builtin(t_exec *exec_node)
 }
 
 /**
- * execute_shell_builtin - Executa builtins que devem rodar no processo pai
+ * exec_parent_builtin - Executa builtins que devem rodar no processo pai
  * @shell: estrutura principal do shell
  * @exec_node: nó de execução com informações do comando
  *
  * Return: código de saída do comando
  */
-int	execute_shell_builtin(t_shell *shell, t_exec *exec_node)
+int	exec_parent_builtin(t_shell *shell, t_exec *exec_node)
 {
 	char	*cmd;
 	
@@ -100,18 +100,18 @@ int	execute_shell_builtin(t_shell *shell, t_exec *exec_node)
 	}
 	if (ft_strcmp(cmd, "cd") == 0)
 	{
-		return (builtin_cd(shell, exec_node));
+		return (ft_cd(shell, exec_node));
 	}
 	
 	// ADICIONANDO OS BUILTINS QUE ESTAVAM FALTANDO:
 	if (ft_strcmp(cmd, "pwd") == 0)
 	{
-		builtin_pwd();
+		ft_pwd();
 		return (0);
 	}
 	if (ft_strcmp(cmd, "echo") == 0)
 	{
-		return (builtin_echo(exec_node));
+		return (ft_echo(exec_node));
 	}
 	if (ft_strcmp(cmd, "env") == 0)
 	{
@@ -167,5 +167,5 @@ int	process_builtins(t_shell *shell, t_exec *exec_node)
 		return (1);
 	
 	// SIMPLIFICADO: todos os builtins rodam no processo pai
-	return (execute_shell_builtin(shell, exec_node));
+	return (exec_parent_builtin(shell, exec_node));
 }

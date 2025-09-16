@@ -36,21 +36,23 @@ endif
 
 all: ${NAME}
 
-# Libft handling - checa se precisa recompilar
+# Libft como dependência separada
 ${LIBFTDIR}/libft.a:
+	@printf "$(YELLOW)$(BOLD)🔧 Checking libft...$(RESET)\n"
 	@if [ ! -d "${LIBFTDIR}" ]; then \
-		printf "$(YELLOW)📦 Cloning libft...$(RESET)\n"; \
+		printf "$(YELLOW)📦 Libft not found. Cloning...$(RESET)\n"; \
 		git clone https://github.com/luarmcouto/libft.git ${LIBFTDIR}; \
 	fi
 	@printf "$(YELLOW)🔨 Building libft...$(RESET)\n"
 	@make -C ${LIBFTDIR}
 	@printf "$(GREEN)✓ Libft ready!$(RESET)\n"
 
-# Progress bar function
+# Progress bar function for minishell
 define progress_bar
 	$(eval COMPILED := $(shell echo $$(($(COMPILED) + 1))))
 	$(eval PERCENT := $(shell echo $$(($(COMPILED) * 100 / $(TOTAL_FILES)))))
 	$(eval BARS := $(shell echo $$(($(PERCENT) / 2))))
+	$(eval SPACES := $(shell echo $$((50 - $(BARS)))))
 	$(eval FILENAME := $(shell basename $< .c))
 	@printf "\r$(BLUE)$(BOLD)[%3d%%]$(RESET) $(GREEN)%s$(RESET) $(YELLOW)%s$(RESET)" \
 		$(PERCENT) \
@@ -59,8 +61,8 @@ define progress_bar
 	@if [ $(COMPILED) -eq $(TOTAL_FILES) ]; then printf "\n"; fi
 endef
 
-# Regra principal - depende dos objetos E da libft
-${NAME}: ${OBJS} ${LIBFTDIR}/libft.a
+# Regra principal - apenas compila se necessário
+${NAME}: ${LIBFTDIR}/libft.a ${OBJS}
 	@printf "$(YELLOW)$(BOLD)🔗 Linking ${NAME}...$(RESET)\n"
 	@${CC} ${FLAGS} ${READLINE} ${OBJS} ${INCLUDE} -o ${NAME}
 	@printf "\n"
@@ -83,32 +85,21 @@ ${NAME}: ${OBJS} ${LIBFTDIR}/libft.a
 	@printf "$(TITLE)║                                                                              ║$(RESET)\n"
 	@printf "$(TITLE)╚══════════════════════════════════════════════════════════════════════════════╝$(RESET)\n"
 	@printf "\n"
-	@printf "$(GREEN)                          🎉 SUCCESSFULLY COMPILED! 🎉                           $(RESET)\n"
-	@printf "$(BLUE)                        Your shell is ready to command! 💪                       $(RESET)\n"
+	@printf "$(B_GREEN)                          🎉 SUCCESSFULLY COMPILED! 🎉                           $(RESET)\n"
+	@printf "$(B_BLUE)                        Your shell is ready to command! 💪                       $(RESET)\n"
 	@printf "\n"
 
-# Compilação dos objetos
 %.o: %.c
 	@${CC} ${FLAGS} ${READLINE} ${IFLAGS} -c $< -o $@
 	@$(progress_bar)
 
 clean:
-	@clear
 	@printf "$(YELLOW)🧹 Cleaning object files...$(RESET)\n"
 	@${RM} ${OBJS}
-	@if [ -d ${LIBFTDIR} ]; then make -C ${LIBFTDIR} clean > /dev/null 2>&1; fi
+	@if [ -d ${LIBFTDIR} ]; then make -C ${LIBFTDIR} clean; fi
 	@printf "$(GREEN)✓ Clean completed.$(RESET)\n"
 
 fclean: clean
-	@clear
-	@printf "$(YELLOW)💥 Full clean...$(RESET)\n"
-	@${RM} ${NAME}
-	@if [ -d ${LIBFTDIR} ]; then make -C ${LIBFTDIR} fclean > /dev/null 2>&1; fi
-	@printf "$(GREEN)✓ Full clean completed.$(RESET)\n"
-
-# Para remover completamente a libft
-fclean-all: clean
-	@clear
 	@printf "$(YELLOW)💥 Full clean with libft removal...$(RESET)\n"
 	@${RM} ${NAME}
 	@rm -rf ${LIBFTDIR}
@@ -146,17 +137,27 @@ env: ${NAME}
 
 re: fclean all
 
-# Force rebuild including libft
-re-all: fclean-all all
+# Force rebuild of everything including libft
+re-all: fclean all
 
-# Debug rule to check dependencies
-debug:
-	@printf "$(BLUE)🔍 Debug Information:$(RESET)\n"
+# Debug rule to check libft
+debug-libft:
+	@printf "$(BLUE)🔍 Libft Debug Information:$(RESET)\n"
 	@printf "$(BLUE)📂 Libft directory: ${LIBFTDIR}$(RESET)\n"
 	@printf "$(BLUE)📁 Libft exists: $(shell [ -d ${LIBFTDIR} ] && echo "$(GREEN)YES$(RESET)" || echo "$(RED)NO$(RESET)")\n"
 	@printf "$(BLUE)📚 Libft.a exists: $(shell [ -f ${LIBFTDIR}/libft.a ] && echo "$(GREEN)YES$(RESET)" || echo "$(RED)NO$(RESET)")\n"
-	@printf "$(BLUE)📊 Total source files: $(BOLD)$(TOTAL_FILES)$(RESET)\n"
-	@printf "$(BLUE)📋 Source files:$(RESET)\n"
-	@echo "$(SRCS)" | tr ' ' '\n' | sed 's/^/  /'
+	@if [ -d ${LIBFTDIR} ]; then \
+		printf "$(BLUE)📋 Libft contents:$(RESET)\n"; \
+		ls -la ${LIBFTDIR}/ | head -10; \
+	fi
 
-.PHONY: all clean fclean fclean-all re re-all test env debug
+# Show compilation stats
+stats:
+	@printf "$(BLUE)📊 Project Statistics:$(RESET)\n"
+	@printf "$(YELLOW)📁 Total source files: $(BOLD)$(TOTAL_FILES)$(RESET)\n"
+	@printf "$(YELLOW)📂 Source directories:$(RESET)\n"
+	@find srcs -type d | sed 's/^/  /'
+	@printf "$(YELLOW)🗂️  Include files:$(RESET)\n"
+	@find includes -name "*.h" | sed 's/^/  /'
+
+.PHONY: all clean fclean re re-all test env debug-libft stats

@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-void	builtin_pwd(void)
+void	ft_pwd(void)
 {
 	char	current_dir[PATH_MAX];
 

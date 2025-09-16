@@ -28,13 +28,12 @@ typedef struct s_env_var
 // builtins_utils.c
 int			is_builtin_command(const char *cmd);
 int			execute_regular_builtin(t_shell *shell_data, t_exec *cmd_node);
-int			execute_shell_builtin(t_shell *shell_data, t_exec *cmd_node);
-int			is_shell_builtin(t_exec *cmd_node);
+int			exec_parent_builtin(t_shell *shell_data, t_exec *cmd_node);
+int			is_parent_builtin(t_exec *cmd_node);
 int			process_builtins(t_shell *shell_data, t_exec *cmd_node);
 
 // cd.c
-int			ft_cd(t_shell *shell, t_exec *exec_node);
-int			builtin_cd(t_shell *shell_data, t_exec *cmd_node);
+int			ft_cd(t_shell *shell_data, t_exec *cmd_node);
 char		*determine_cd_path(t_shell *shell_data, char *provided_arg);
 int			refresh_pwd_variables(t_shell *shell_data);
 int			update_new_pwd(t_shell *shell_data, char *old_dir);
@@ -42,11 +41,9 @@ int			update_new_pwd(t_shell *shell_data, char *old_dir);
 // cd_utils.c
 int			handle_chdir_failure(char *directory);
 int			display_cd_error(char *dir_path, char *error_msg);
-char		*sh_get_env(t_list *envp, const char *value);
 
 // echo.c
 int			ft_echo(t_exec *exec_node);
-int			builtin_echo(t_exec *cmd_node);
 int			check_no_newline_flag(char *argument);
 void		print_echo_args(char **arguments, int start_idx, int add_newline);
 
@@ -64,7 +61,7 @@ t_list		*create_env_list(t_shell *shell_data, char **envp);
 t_env_var	*create_env_node(t_shell *shell_data, char **envp);
 char		*extract_value(t_shell *shell_data, char *env_str);
 char		*extract_content(t_shell *shell_data, char *env_str);
-char		*get_shell_env(t_list *envp, const char *var_name);
+char		*get_shell_env(t_list *envp, const char *value);
 void		print_env_lst(t_list *lst);
 
 // env_utils_sizes.c
@@ -104,7 +101,6 @@ void		modify_existing_var(t_env_var *env_variable, t_env_var *new_variable);
 
 // pwd.c
 void		ft_pwd(void);
-void		builtin_pwd(void);
 int			validate_pwd(t_exec *cmd_node);
 
 // unset.c

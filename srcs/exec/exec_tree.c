@@ -106,13 +106,10 @@ void	exec_node(t_shell *shell, t_exec *exec_node)
 	// Expande argumentos
 	exec_node->argv = expand_argv(shell, exec_node->argv);
 	
-	// Verifica wildcards se implementado
-	// check_wildcards(shell, exec_node);
-	
 	// Executa built-in se for o caso
 	if (exec_node->command && is_builtin_command(exec_node->command))
 	{
-		ret = execute_shell_builtin(shell, exec_node);
+		ret = exec_parent_builtin(shell, exec_node);
 		shell->exit_code = ret;  // Define exit code sem sair
 		return;  // Retorna para continuar o shell
 	}

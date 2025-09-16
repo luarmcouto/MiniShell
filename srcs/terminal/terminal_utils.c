@@ -22,6 +22,7 @@ void	shell_input(t_shell *shell)
 
 	code = ft_itoa(exit_code(-1));  // ← NOVA LINHA
 	cwd = getcwd(NULL, 0);
+	//cwd = NULL;
 	prompt = ESC_START PROMPT ESC_RESET;
 	tmp = ft_strjoin(prompt, code);  // ← MUDANÇA AQUI
 	free(code);  // ← NOVA LINHA
