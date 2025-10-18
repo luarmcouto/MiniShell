@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 16:27:37 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/06 12:13:44 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/18 00:00:00 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static void	ft_print_error_no_params(int error_code)
 		ft_fprintf(2, ERROR_HEREDOC_DELIMITER);
 	else if (error_code == 10)
 		ft_fprintf(2, ERROR_HEREDOC_PROCESS);
+	else if (error_code == 15)
+		ft_fprintf(2, ERROR_UNCLOSED_QUOTES);
 }
 
 static void	ft_print_error_with_params(int code, char *msg, char *msg2)
@@ -52,7 +54,8 @@ static void	ft_print_error_with_params(int code, char *msg, char *msg2)
 int	ft_handle_error(int error_code, int exit_code, char *msg, char *msg2)
 {
 	if (error_code == 2 || error_code == 5 || error_code == 7
-		|| error_code == 8 || error_code == 9 || error_code == 10)
+		|| error_code == 8 || error_code == 9 || error_code == 10
+		|| error_code == 15)
 		ft_print_error_no_params(error_code);
 	else
 		ft_print_error_with_params(error_code, msg, msg2);

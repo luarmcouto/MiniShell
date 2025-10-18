@@ -103,6 +103,7 @@ unexpected token `%s'\n"
 # define ERROR_INVALID_IDENTIFIER "minishell: export: `%s': not a \
 valid identifier\n"
 # define ERROR_NUM_ARG_REQ "minishell: exit: %s: numeric argument required\n"
+# define ERROR_UNCLOSED_QUOTES "minishell: syntax error: unclosed quotes\n"
 
 // Heredoc
 # define HEREDOC_PROMPT "heredoc> "
@@ -160,6 +161,8 @@ char				*ft_build_path(const char *dir, const char *entry);
 
 // Parsing
 char				**ft_split_input(const char *input, int argc);
+int					ft_check_unclosed_quotes(const char *input);
+char				ft_get_unclosed_quote_type(const char *input);
 t_cmd				*ft_parse_input(char **argv, t_data *data);
 void				ft_skip_quotes(const char *cmd, int *i);
 char				**ft_handle_env_expansion(char **argv, t_data *data);

@@ -72,6 +72,7 @@ MINISHELL_SRCS = \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_remove_quotes.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_syntax_check.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_handle_env_expansion_utils.c \
+	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_check_unclosed_quotes.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/signals/ft_sigint_handler.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/signals/ft_init_signals.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_echo.c \

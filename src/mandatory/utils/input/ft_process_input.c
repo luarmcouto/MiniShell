@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/17 20:16:58 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/18 19:09:23 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@ int	ft_process_input(char *input, t_data *data, t_cmd **cmd_list, int debug)
 	char	**argv;
 	char	**expanded_argv;
 
+	if (ft_check_unclosed_quotes(input))
+	{
+		ft_handle_error(15, 2, NULL, NULL);
+		data->last_exit_status = 2;
+		free(input);
+		return (0);
+	}
 	data->argc = ft_count_args(input);
 	argv = ft_split_input(input, data->argc);
 	free(input);
