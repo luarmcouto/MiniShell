@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minishell.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 17:47:21 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/17 21:05:29 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/18 19:10:40 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_minishell(char **envp, int debug)
 	{
 		if (!ft_process_input(input, data, &cmd_list, debug))
 			continue ;
-		pids = malloc(sizeof(pid_t) * data->cmd_count);
+		pids = ft_calloc(data->cmd_count, sizeof(pid_t));
 		if (!pids)
 			continue ;
 		if (ft_execute_pipeline(cmd_list, pids, &data) == -1)
