@@ -29,28 +29,25 @@ static int	ft_handle_backslash_n(char *arg, int *i, int outfd)
 static int	ft_putarg_echo(char *arg, int flag_n, int outfd)
 {
 	int	i;
-	int	len;
-	int	result;
 
 	if (!arg)
 		return (0);
-	len = ft_strlen(arg);
+	
 	i = 0;
-	if (len >= 2 && ((arg[0] == '"' && arg[len - 1] == '"')
-			|| (arg[0] == '\'' && arg[len - 1] == '\'')))
+	while (arg[i])
 	{
-		i = 1;
-		len--;
-	}
-	while (i < len)
-	{
-		result = ft_handle_backslash_n(arg, &i, outfd);
-		if (result == -1)
+		if (arg[i] == '\\' && arg[i + 1] == 'n')
+		{
+			if (ft_putchar_fd('\\', outfd) == -1)
+				return (-1);
+			if (ft_putchar_fd('n', outfd) == -1)
+				return (-1);
+			i += 2;
+			continue;
+		}
+		if (ft_putchar_fd(arg[i], outfd) == -1)
 			return (-1);
-		if (result == 1)
-			continue ;
-		if (ft_putchar_fd(arg[i++], outfd) == -1)
-			return (-1);
+		i++;
 	}
 	return (0);
 }
