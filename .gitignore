@@ -1,9 +1,26 @@
-**/*.o
-*.o
-*/*.o
-.vscode
-libft.a
-.DS_Store
+# Program
 minishell
-.gitmodules
-libft
+
+.vscode/
+
+# Compiled Object Files
+*.o
+
+# Static Libraries
+*.a
+
+# Text Files
+*.txt
+
+# DS_Store
+.DS_Store/
+
+# Executables
+minishell
+minishell_bonus
+
+assets/welcome.txt
+
+# Tester
+
+minishell_tester/
