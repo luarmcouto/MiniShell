@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 20:11:55 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/08 10:06:29 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/20 13:41:34 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	ft_check_overflow(long long result, char digit, int sign)
 		limit = LLONG_MAX;
 	else
 		limit = (unsigned long long)LLONG_MAX + 1ULL;
-	if (result > (limit - (digit - '0')) / 10)
+	if ((unsigned long long)result > (limit - (digit - '0')) / 10)
 		return (1);
 	return (0);
 }

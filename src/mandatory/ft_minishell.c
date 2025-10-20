@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minishell.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 17:47:21 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/18 19:10:40 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/20 12:10:24 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,31 @@ int	ft_minishell(char **envp, int debug)
 	data = ft_setup_minishell(envp);
 	if (!data)
 		return (1);
+	cmd_list = NULL;
 	while (ft_read_input(&input, data))
 	{
 		if (!ft_process_input(input, data, &cmd_list, debug))
 			continue ;
 		pids = ft_calloc(data->cmd_count, sizeof(pid_t));
 		if (!pids)
+		{
+			ft_free_cmd_list(cmd_list);
 			continue ;
+		}
 		if (ft_execute_pipeline(cmd_list, pids, &data) == -1)
+		{
+			free(pids);
+			ft_free_cmd_list(cmd_list);
 			break ;
+		}
 		ft_finish_execution(pids, data->cmd_count, cmd_list, data);
+		cmd_list = NULL;
 	}
+	if (cmd_list)
+		ft_free_cmd_list(cmd_list);
 	exit_status = data->last_exit_status;
 	ft_free_char_array(data->envp);
 	free(data);
+	rl_clear_history();
 	return (exit_status);
 }

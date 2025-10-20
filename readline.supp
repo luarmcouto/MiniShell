@@ -1,0 +1,27 @@
+{
+   readline_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libreadline.so*
+}
+
+{
+   ncurses_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libncurses.so*
+}
+
+{
+   readline_init
+   Memcheck:Leak
+   ...
+   fun:rl_initialize
+}
+
+{
+   readline_read
+   Memcheck:Leak
+   ...
+   fun:readline
+}
