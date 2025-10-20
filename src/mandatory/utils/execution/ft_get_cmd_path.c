@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 16:30:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/17 20:15:38 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/20 09:33:27 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,21 @@ static void	free_char_array(char **arr)
 	free(arr);
 }
 
-char	*get_cmd_path(char *cmd)
+char	*get_cmd_path(char *cmd, char **envp)
 {
 	char	*temp;
 	char	**paths;
 	char	*path;
+	char	*path_env;
 	int		i;
 	int		j;
 
-	paths = ft_split(getenv("PATH"), ':');
+	path_env = ft_getenv("PATH", envp);
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
 	i = 0;
 	while (paths[i])
 	{

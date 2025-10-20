@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/17 20:17:03 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/20 10:11:17 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_read_input(char **input, t_data *data)
 			free(prompt);
 		}
 		else
-			*input = readline("minishell> ");
+			*input = readline(NULL);
 		if (!*input)
 			return (0);
 		if (**input)

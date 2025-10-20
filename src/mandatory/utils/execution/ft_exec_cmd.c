@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:06:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/06 19:33:01 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/20 09:35:39 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ static void	ft_compact_argv(char **argv)
 	argv[j] = NULL;
 }
 
-static char	*ft_get_cmd_path(char *cmd_name)
+static char	*ft_get_cmd_path(char *cmd_name, char **envp)
 {
 	char	*path;
 
 	if (ft_strchr(cmd_name, '/'))
 		path = ft_strdup(cmd_name);
 	else
-		path = get_cmd_path(cmd_name);
+		path = get_cmd_path(cmd_name, envp);
 	return (path);
 }
 
@@ -78,7 +78,7 @@ int	ft_exec_cmd(t_cmd *cmd)
 	ft_compact_argv(cmd->argv);
 	if (!cmd->argv[0])
 		return (0);
-	path = ft_get_cmd_path(cmd->argv[0]);
+	path = ft_get_cmd_path(cmd->argv[0],cmd->data->envp);
 	error = ft_validate_path(path, cmd->argv[0]);
 	if (error)
 		return (error);

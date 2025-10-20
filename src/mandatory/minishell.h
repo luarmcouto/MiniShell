@@ -196,7 +196,7 @@ int					is_escaped(const char *input, int pos, int in_quote,
 // Execution
 int					ft_exec_cmd(t_cmd *cmd);
 int					ft_pipex(const char **argv, int fd_in, char **envp);
-char				*get_cmd_path(char *cmd);
+char				*get_cmd_path(char *cmd, char **envp);
 void				ft_close_unused_fds(t_cmd *current_cmd, t_cmd *cmd_list);
 void				ft_finish_execution(pid_t *pids, int cmd_count,
 						t_cmd *cmd_list, t_data *data);

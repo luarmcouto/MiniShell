@@ -7,7 +7,7 @@ CFLAGS = -I/opt/homebrew/opt/readline/include
 # Linker flags (use Homebrew readline/ncurses for macOS ARM64)
 LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline -lncurses
 
-# Compilator
+# Compilator
 CC = cc
 
 # Archiver
@@ -64,6 +64,7 @@ MINISHELL_SRCS = \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/execution/ft_handle_heredoc.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/execution/ft_setup_child_io.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_skip_quotes.c \
+	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_check_unclosed_quotes.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_split_input.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_split_input_utils.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_parse_input.c \
@@ -72,7 +73,6 @@ MINISHELL_SRCS = \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_remove_quotes.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_syntax_check.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_handle_env_expansion_utils.c \
-	$(MANDATORY_DIR)/$(UTILS_DIR)/parsing/ft_check_unclosed_quotes.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/signals/ft_sigint_handler.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/signals/ft_init_signals.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_echo.c \
@@ -88,6 +88,12 @@ MINISHELL_SRCS = \
 # Objetos para mandatory y bonus
 MAIN_OBJECT = $(MAIN_SOURCE:$(MANDATORY_DIR)/%.c=$(OBJ_MANDATORY_DIR)/%.o)
 MINISHELL_OBJS = $(MINISHELL_SRCS:$(MANDATORY_DIR)/%.c=$(OBJ_MANDATORY_DIR)/%.o)
+VALGRIND_SUPP	= valgrind_suppression.supp
+
+# Colors
+GREEN = \033[32m
+YELLOW = \033[33m
+RESET = \033[0m
 
 all: $(LIB_NAME) $(NAME)
 	@echo "\033[35m$(NAME) executable is ready to use!\033[0m"
@@ -96,7 +102,7 @@ all: $(LIB_NAME) $(NAME)
 $(LIB_NAME):
 	@$(MAKE) -C $(LIBFT_DIR)
 
-# Compile the project
+# Compile the project
 $(NAME): $(MINISHELL_OBJS) $(MAIN_OBJECT)
 	@$(CC) $(CFLAGS) $(MINISHELL_OBJS) $(MAIN_OBJECT) $(LIB_NAME) $(LDFLAGS) -o $(NAME)
 	@if [ $$? -eq 0 ]; then \
@@ -110,6 +116,40 @@ $(OBJ_MANDATORY_DIR)/%.o: $(MANDATORY_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+# Create valgrind suppression file
+$(VALGRIND_SUPP):
+	@echo "$(YELLOW)Creating valgrind suppression file...$(RESET)"
+	@echo "{" > $(VALGRIND_SUPP)
+	@echo "   readline_memory_leak_suppression" >> $(VALGRIND_SUPP)
+	@echo "   Memcheck:Leak" >> $(VALGRIND_SUPP)
+	@echo "   ..." >> $(VALGRIND_SUPP)
+	@echo "   fun:readline" >> $(VALGRIND_SUPP)
+	@echo "}" >> $(VALGRIND_SUPP)
+	@echo "{" >> $(VALGRIND_SUPP)
+	@echo "   readline_add_history_suppression" >> $(VALGRIND_SUPP)
+	@echo "   Memcheck:Leak" >> $(VALGRIND_SUPP)
+	@echo "   ..." >> $(VALGRIND_SUPP)
+	@echo "   fun:add_history" >> $(VALGRIND_SUPP)
+	@echo "}" >> $(VALGRIND_SUPP)
+	@echo "{" >> $(VALGRIND_SUPP)
+	@echo "   readline_internal_suppression" >> $(VALGRIND_SUPP)
+	@echo "   Memcheck:Leak" >> $(VALGRIND_SUPP)
+	@echo "   ..." >> $(VALGRIND_SUPP)
+	@echo "   fun:_rl_*" >> $(VALGRIND_SUPP)
+	@echo "}" >> $(VALGRIND_SUPP)
+	@echo "{" >> $(VALGRIND_SUPP)
+	@echo "   suppress_execve_bin_error" >> $(VALGRIND_SUPP)
+	@echo "   Memcheck:Leak" >> $(VALGRIND_SUPP)
+	@echo "   ..." >> $(VALGRIND_SUPP)
+	@echo "   obj:/usr/bin/*" >> $(VALGRIND_SUPP)
+	@echo "}" >> $(VALGRIND_SUPP)
+	@echo "$(GREEN)✅ Valgrind suppression file created!$(RESET)"
+
+# Run valgrind with suppression
+v: $(LIB_NAME) $(NAME) $(VALGRIND_SUPP)
+	@echo "$(YELLOW)Running valgrind with suppression file...$(RESET)"
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--suppressions=./$(VALGRIND_SUPP) ./$(NAME)
 
 # Clean up object files
 clean:
@@ -122,10 +162,9 @@ clean:
 	fi
 
 # Clean up object files and the executable
-fclean:
-	@rm -rf $(OBJ_DIR)
+fclean: clean
 	@$(MAKE) -C $(LIBFT_DIR) fclean
-	@rm -f $(NAME) $(NAME)_bonus
+	@rm -f $(NAME) $(NAME)_bonus $(VALGRIND_SUPP)
 	@if [ $$? -eq 0 ]; then \
 		echo "\033[32m🗑️  Libraries, objects and executables cleaned successfully!\033[0m"; \
 	else \
@@ -134,7 +173,7 @@ fclean:
 
 re: fclean
 	@echo "\033[34m🔄 Recompiling everything...\033[0m"
-	@$(MAKE) --always-make all
+	@$(MAKE) all
 	@if [ $$? -eq 0 ]; then \
 		echo "\033[38;5;208m🎉 Recompilation completed successfully!\033[0m"; \
 	else \
@@ -142,4 +181,4 @@ re: fclean
 	fi
 
 # Phony targets
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re v
