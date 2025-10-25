@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_finish_execution.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:10:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/08 09:43:11 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/20 13:56:14 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_free_cmd_list(t_cmd *cmd_list)
+void	ft_free_cmd_list(t_cmd *cmd_list)
 {
 	t_cmd	*tmp;
 
 	while (cmd_list)
 	{
 		tmp = cmd_list->next;
-		ft_free_char_array(cmd_list->argv);
+		if (cmd_list->argv)
+			ft_free_char_array(cmd_list->argv);
 		free(cmd_list);
 		cmd_list = tmp;
 	}
@@ -69,5 +70,5 @@ void	ft_finish_execution(pid_t *pids, int cmd_count, t_cmd *cmd_list,
 		data->last_exit_status = exit_status;
 	free(pids);
 	ft_free_cmd_list(cmd_list);
-	cmd_list = NULL;
+	//cmd_list = NULL;
 }

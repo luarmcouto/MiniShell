@@ -229,6 +229,7 @@ int					ft_count_args(const char *cmd);
 // Memory management utilities
 void				ft_free_char_array(char **array);
 void				ft_free_char_array_size(char **array, int size);
+void				ft_free_cmd_list(t_cmd *cmd_list);
 
 // Input handling
 int					ft_read_input(char **input, t_data *data);

@@ -12,24 +12,11 @@
 
 #include "../../minishell.h"
 
-static int	ft_handle_backslash_n(char *arg, int *i, int outfd)
-{
-	if (arg[*i] == '\\' && arg[*i + 1] == 'n')
-	{
-		if (ft_putchar_fd('\\', outfd) == -1)
-			return (-1);
-		if (ft_putchar_fd('n', outfd) == -1)
-			return (-1);
-		*i += 2;
-		return (1);
-	}
-	return (0);
-}
-
 static int	ft_putarg_echo(char *arg, int flag_n, int outfd)
 {
 	int	i;
-
+	
+	(void)flag_n;
 	if (!arg)
 		return (0);
 	

@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:06:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 09:35:39 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/20 13:59:14 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@ static void	ft_compact_argv(char **argv)
 	int	i;
 	int	j;
 
+	if (!argv)
+		return;
 	i = 0;
 	j = 0;
 	while (argv[i])
 	{
-		if (ft_strlen(argv[i]) > 0)
+		if (argv[i] && ft_strlen(argv[i]) > 0)
 		{
 			if (i != j)
 				argv[j] = argv[i];
@@ -82,6 +84,12 @@ int	ft_exec_cmd(t_cmd *cmd)
 	error = ft_validate_path(path, cmd->argv[0]);
 	if (error)
 		return (error);
+	if (!path || !cmd->argv || !cmd->data || !cmd->data->envp)
+	{
+		if (path)
+			free(path);
+		return (EXIT_FAILURE);
+	}
 	execve(path, cmd->argv, cmd->data->envp);
 	perror("minishell: execve");
 	free(path);

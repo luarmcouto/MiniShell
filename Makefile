@@ -1,11 +1,22 @@
 NAME = minishell
 
-#
-# Compilation flags (use Homebrew readline/ncurses for macOS ARM64)
-CFLAGS = -I/opt/homebrew/opt/readline/include
-#
-# Linker flags (use Homebrew readline/ncurses for macOS ARM64)
-LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline -lncurses
+# Debug mode: make DEBUG=1 for sanitizers
+DEBUG ?= 0
+
+# Base compilation flags
+BASE_CFLAGS = -Wall -Wextra -Werror -I/opt/homebrew/opt/readline/include
+BASE_LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline -lncurses
+
+# Add sanitizer flags if DEBUG=1
+ifeq ($(DEBUG), 1)
+    CFLAGS = $(BASE_CFLAGS) -g3 -fsanitize=leak -fno-omit-frame-pointer
+    LDFLAGS = $(BASE_LDFLAGS) -fsanitize=leak
+    SANITIZER_MSG = with LeakSanitizer
+else
+    CFLAGS = $(BASE_CFLAGS)
+    LDFLAGS = $(BASE_LDFLAGS)
+    SANITIZER_MSG = (production mode)
+endif
 
 # Compilator
 CC = cc
@@ -82,21 +93,24 @@ MINISHELL_SRCS = \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_unset.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_env.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_exit.c \
-	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_handle_builtins.c \
-
+	$(MANDATORY_DIR)/$(UTILS_DIR)/builtins/ft_handle_builtins.c
 
 # Objetos para mandatory y bonus
 MAIN_OBJECT = $(MAIN_SOURCE:$(MANDATORY_DIR)/%.c=$(OBJ_MANDATORY_DIR)/%.o)
 MINISHELL_OBJS = $(MINISHELL_SRCS:$(MANDATORY_DIR)/%.c=$(OBJ_MANDATORY_DIR)/%.o)
-VALGRIND_SUPP	= valgrind_suppression.supp
+VALGRIND_SUPP = valgrind_suppression.supp
 
 # Colors
 GREEN = \033[32m
 YELLOW = \033[33m
+RED = \033[31m
+BLUE = \033[34m
+MAGENTA = \033[35m
+CYAN = \033[36m
 RESET = \033[0m
 
 all: $(LIB_NAME) $(NAME)
-	@echo "\033[35m$(NAME) executable is ready to use!\033[0m"
+	@echo "$(MAGENTA)$(NAME) executable is ready to use! $(SANITIZER_MSG)$(RESET)"
 
 # Compile the library
 $(LIB_NAME):
@@ -104,11 +118,12 @@ $(LIB_NAME):
 
 # Compile the project
 $(NAME): $(MINISHELL_OBJS) $(MAIN_OBJECT)
+	@echo "$(CYAN)Linking $(NAME)...$(RESET)"
 	@$(CC) $(CFLAGS) $(MINISHELL_OBJS) $(MAIN_OBJECT) $(LIB_NAME) $(LDFLAGS) -o $(NAME)
 	@if [ $$? -eq 0 ]; then \
-		echo "\033[32m✅ Compilation completed successfully!\033[0m"; \
+		echo "$(GREEN)✅ Compilation completed successfully! $(SANITIZER_MSG)$(RESET)"; \
 	else \
-		echo "\033[31m❌ Error during compilation!\033[0m"; \
+		echo "$(RED)❌ Error during compilation!$(RESET)"; \
 	fi
 
 # Compile object files for mandatory
@@ -151,14 +166,26 @@ v: $(LIB_NAME) $(NAME) $(VALGRIND_SUPP)
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 		--suppressions=./$(VALGRIND_SUPP) ./$(NAME)
 
+# Debug target with LeakSanitizer
+debug: fclean
+	@echo "$(BLUE)🔍 Compiling with LeakSanitizer...$(RESET)"
+	@$(MAKE) DEBUG=1
+	@echo "$(GREEN)✅ Debug build ready! Run ./$(NAME) to test$(RESET)"
+
+# Test with LeakSanitizer
+leak: debug
+	@echo "$(YELLOW)🧪 Testing with LeakSanitizer...$(RESET)"
+	@echo "Type 'exit' to quit the shell"
+	@./$(NAME)
+
 # Clean up object files
 clean:
 	@rm -rf $(OBJ_DIR)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	@if [ $$? -eq 0 ]; then \
-		echo "\033[32m🧹 Object files cleaned successfully!\033[0m"; \
+		echo "$(GREEN)🧹 Object files cleaned successfully!$(RESET)"; \
 	else \
-		echo "\033[31m❌ Error cleaning object files!\033[0m"; \
+		echo "$(RED)❌ Error cleaning object files!$(RESET)"; \
 	fi
 
 # Clean up object files and the executable
@@ -166,19 +193,34 @@ fclean: clean
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@rm -f $(NAME) $(NAME)_bonus $(VALGRIND_SUPP)
 	@if [ $$? -eq 0 ]; then \
-		echo "\033[32m🗑️  Libraries, objects and executables cleaned successfully!\033[0m"; \
+		echo "$(GREEN)🗑️  Libraries, objects and executables cleaned successfully!$(RESET)"; \
 	else \
-		echo "\033[31m❌ Error cleaning libraries, objects and executables!\033[0m"; \
+		echo "$(RED)❌ Error cleaning libraries, objects and executables!$(RESET)"; \
 	fi
 
 re: fclean
-	@echo "\033[34m🔄 Recompiling everything...\033[0m"
+	@echo "$(BLUE)🔄 Recompiling everything...$(RESET)"
 	@$(MAKE) all
 	@if [ $$? -eq 0 ]; then \
-		echo "\033[38;5;208m🎉 Recompilation completed successfully!\033[0m"; \
+		echo "$(MAGENTA)🎉 Recompilation completed successfully!$(RESET)"; \
 	else \
-		echo "\033[31m❌ Error during recompilation!\033[0m"; \
+		echo "$(RED)❌ Error during recompilation!$(RESET)"; \
 	fi
 
+# Help message
+help:
+	@echo "$(CYAN)╔════════════════════════════════════════════════════════════╗$(RESET)"
+	@echo "$(CYAN)║              Minishell Makefile Commands                  ║$(RESET)"
+	@echo "$(CYAN)╠════════════════════════════════════════════════════════════╣$(RESET)"
+	@echo "$(GREEN)  make              $(RESET)- Compile in production mode"
+	@echo "$(GREEN)  make DEBUG=1      $(RESET)- Compile with LeakSanitizer"
+	@echo "$(GREEN)  make debug        $(RESET)- Clean + compile with LeakSanitizer"
+	@echo "$(GREEN)  make leak         $(RESET)- Compile and run with LeakSanitizer"
+	@echo "$(GREEN)  make v            $(RESET)- Run with Valgrind"
+	@echo "$(GREEN)  make clean        $(RESET)- Remove object files"
+	@echo "$(GREEN)  make fclean       $(RESET)- Remove everything"
+	@echo "$(GREEN)  make re           $(RESET)- Recompile everything"
+	@echo "$(CYAN)╚════════════════════════════════════════════════════════════╝$(RESET)"
+
 # Phony targets
-.PHONY: all clean fclean re v
+.PHONY: all clean fclean re v debug leak help

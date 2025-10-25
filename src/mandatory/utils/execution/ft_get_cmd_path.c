@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 16:30:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 09:33:27 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/20 13:33:56 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	*get_cmd_path(char *cmd, char **envp)
 	char	*path;
 	char	*path_env;
 	int		i;
-	int		j;
 
 	path_env = ft_getenv("PATH", envp);
 	if (!path_env)

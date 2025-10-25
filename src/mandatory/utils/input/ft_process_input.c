@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/18 19:09:23 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/20 12:02:45 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@ int	ft_process_input(char *input, t_data *data, t_cmd **cmd_list, int debug)
 		return (0);
 	expanded_argv = ft_handle_env_expansion(argv, data);
 	*cmd_list = ft_parse_input(expanded_argv, data);
+	if (!*cmd_list)
+	{
+		ft_free_char_array(argv);
+		if (expanded_argv != argv)
+			ft_free_char_array(expanded_argv);
+		return (0);
+	}
 	if (debug && *cmd_list)
 		ft_show_debug(argv, data->argc, expanded_argv, *cmd_list);
 	ft_free_char_array(argv);

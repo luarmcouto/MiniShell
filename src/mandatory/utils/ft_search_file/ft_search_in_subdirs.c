@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 18:24:06 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/17 20:16:51 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/20 13:33:12 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static char	*ft_search_entries(DIR *d, const char *dir, const char *filename)
 {
 	struct dirent	*entry;
 	char			*result;
-	int				dot_status;
 
 	result = NULL;
 	entry = readdir(d);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:16:59 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/24 17:48:05 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/20 12:47:38 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,10 @@ char	*ft_remove_quotes(const char *str)
 	init_remove_quotes_vars(&i, &j, &in_q, &q);
 	res = malloc(calc_unquoted_len(str) + 1);
 	if (!res)
+	{
+		free(res);
 		return (NULL);
+	}
 	while (str[i])
 	{
 		if (in_q && q == '"' && str[i] == '\\'
