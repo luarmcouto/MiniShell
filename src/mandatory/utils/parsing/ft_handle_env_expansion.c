@@ -51,6 +51,11 @@ char	*ft_expand_env_var(char *result, char *argv, int *j, t_data *data)
 	char	*old_str;
 
 	start = *j;
+	if (argv[*j] >= '0' && argv[*j] <= '9')
+	{
+		(*j)++;
+		return (result);
+	}
 	while (argv[*j] && (isalnum(argv[*j]) || argv[*j] == '_'))
 		(*j)++;
 	if (*j > start)

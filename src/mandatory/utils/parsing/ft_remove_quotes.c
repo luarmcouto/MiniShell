@@ -6,11 +6,11 @@
 /*   By: iwietzke <iwietzke@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:16:59 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/02 17:10:41 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/24 17:48:05 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include"../../minishell.h"
 
 static int	skip_quote(const char *str, int *i, char *quote, int *in_quote)
 {
@@ -56,6 +56,14 @@ static int	calc_unquoted_len(const char *str)
 	q = 0;
 	while (str[i])
 	{
+		if (in_q && q == '"' && str[i] == '\\' 
+			&& (str[i + 1] == '$' || str[i + 1] == '"' 
+				|| str[i + 1] == '\\' || str[i + 1] == '`'))
+		{
+			len++;
+			i += 2;
+			continue;
+		}
 		process_quote_char(str, i, &in_q, &q);
 		if (!in_q && str[i] != '\'' && str[i] != '"')
 			len++;
@@ -90,6 +98,14 @@ char	*ft_remove_quotes(const char *str)
 		return (NULL);
 	while (str[i])
 	{
+		if (in_q && q == '"' && str[i] == '\\'
+			&& (str[i + 1] == '$' || str[i + 1] == '"' 
+				|| str[i + 1] == '\\' || str[i + 1] == '`'))
+		{
+			res[j++] = str[i + 1];
+			i += 2;
+			continue;
+		}
 		if (!skip_quote(str, &i, &q, &in_q))
 			res[j++] = str[i++];
 		else
