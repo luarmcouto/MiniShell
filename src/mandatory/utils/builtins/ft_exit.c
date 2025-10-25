@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 20:11:55 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 13:41:34 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/25 18:33:24 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,24 +90,33 @@ long long	ft_atoll(const char *str)
 	return (result * sign);
 }
 
-int	ft_exit(t_cmd *cmd)
+int	ft_exit(t_cmd *cmd, t_cmd *cmd_list, pid_t *pids, t_data *data)
 {
 	char		**args;
 	int			arg_count;
 	long long	value;
+	int			exit_code;
 
 	args = cmd->argv;
 	if (!args)
-		exit(0);
+		ft_cleanup_and_exit(cmd_list, pids, data, 0);
 	arg_count = 0;
 	while (args[arg_count])
 		arg_count++;
 	if (arg_count == 1)
-		exit(0);
+		ft_cleanup_and_exit(cmd_list, pids, data, 0);
 	if (arg_count > 2)
-		exit(ft_handle_error(7, EXIT_FAILURE, NULL, NULL));
+	{
+		ft_handle_error(7, EXIT_FAILURE, NULL, NULL);
+		ft_cleanup_and_exit(cmd_list, pids, data, EXIT_FAILURE);
+	}
 	if (!ft_is_numeric(args[1]))
-		exit(ft_handle_error(14, 255, NULL, NULL));
+	{
+		ft_handle_error(14, 255, NULL, NULL);
+		ft_cleanup_and_exit(cmd_list, pids, data, 255);
+	}
 	value = ft_atoll(args[1]);
-	exit((int)(value % 256));
+	exit_code = (int)(value % 256);
+	ft_cleanup_and_exit(cmd_list, pids, data, exit_code);
+	return (0);
 }

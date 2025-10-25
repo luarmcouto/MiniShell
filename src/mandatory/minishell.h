@@ -262,8 +262,13 @@ int					ft_pwd(t_cmd cmd);
 int					ft_export(char **args, char ***envp);
 int					ft_unset(char **args, char ***envp);
 int					ft_env(t_cmd cmd, char **envp);
-int					ft_exit(t_cmd *cmd);
+int					ft_exit(t_cmd *cmd, t_cmd *cmd_list, pid_t *pids, t_data *data);
 void				ft_print_var(char *env_str);
+
+// Cleanup function:
+void    ft_free_data(t_data *data);
+void    ft_cleanup_and_exit(t_cmd *cmd_list, pid_t *pids, t_data *data, 
+                            int exit_code);
 
 // Utilities
 int					ft_is_dot_or_dotdot(const char *name);
