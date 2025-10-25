@@ -55,7 +55,7 @@ static int	ft_print_args(char **argv, int start, int outfd)
 	{
 		if (ft_putarg_echo(argv[i], 0, outfd) == -1)
 			return (1);
-		if (argv[i + 1] && argv[i + 1][0] != '\0')
+		if (argv[i + 1])
 		{
 			if (ft_putchar_fd(' ', outfd) == -1)
 				return (1);
