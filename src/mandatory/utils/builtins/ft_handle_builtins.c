@@ -14,7 +14,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static int	ft_exec_builtin(t_cmd *cmd, t_data **data)
+static int	ft_exec_builtin(t_cmd *cmd, t_data **data, t_cmd *cmd_list, pid_t *pids)
 {
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		return (ft_echo(*cmd));
@@ -29,16 +29,16 @@ static int	ft_exec_builtin(t_cmd *cmd, t_data **data)
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (ft_env(*cmd, (*data)->envp));
 	if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		ft_exit(cmd);
+		ft_exit(cmd, cmd_list, pids, *data);
 	return (-1);
 }
 
-static int	ft_exec_builtin_child(t_cmd *cmd, t_data **data, t_cmd *cmd_list)
+static int	ft_exec_builtin_child(t_cmd *cmd, t_data **data, t_cmd *cmd_list, pid_t *pids)
 {
 	int	status;
 
 	ft_setup_child_io(cmd, cmd_list);
-	status = ft_exec_builtin(cmd, data);
+	status = ft_exec_builtin(cmd, data, cmd_list, pids);
 	exit(status);
 }
 
@@ -49,7 +49,7 @@ static int	ft_handle_builtin_fork(t_cmd *cmd, t_data **data, t_cmd *cmd_list,
 
 	pid = fork();
 	if (pid == 0)
-		ft_exec_builtin_child(cmd, data, cmd_list);
+		ft_exec_builtin_child(cmd, data, cmd_list, pids);
 	else if (pid > 0)
 	{
 		if (pids)
@@ -70,5 +70,5 @@ int	ft_handle_builtins(t_cmd *cmd, t_data **data, t_cmd *cmd_list, pid_t *pids)
 		return (-1);
 	if (cmd->infd != STDIN_FILENO || cmd->outfd != STDOUT_FILENO)
 		return (ft_handle_builtin_fork(cmd, data, cmd_list, pids));
-	return (ft_exec_builtin(cmd, data));
+	return (ft_exec_builtin(cmd, data, cmd_list, pids));
 }

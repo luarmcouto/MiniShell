@@ -46,6 +46,7 @@ MAIN_SOURCE_BONUS = $(BONUS_DIR)/main.c
 MINISHELL_SRCS = \
 	$(MANDATORY_DIR)/ft_minishell.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/ft_msg_start.c \
+	$(MANDATORY_DIR)/$(UTILS_DIR)/ft_cleanup.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/ft_search_file/ft_is_dot_or_dotdot.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/ft_search_file/ft_search_file.c \
 	$(MANDATORY_DIR)/$(UTILS_DIR)/ft_search_file/ft_search_in_dir.c \
