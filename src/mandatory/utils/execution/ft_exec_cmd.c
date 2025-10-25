@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:06:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 13:59:14 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/25 20:04:57 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ int	ft_exec_cmd(t_cmd *cmd)
 	path = ft_get_cmd_path(cmd->argv[0],cmd->data->envp);
 	error = ft_validate_path(path, cmd->argv[0]);
 	if (error)
-		return (error);
+	{
+    	ft_child_cleanup(cmd, path);
+    	return (error);
+	}
 	if (!path || !cmd->argv || !cmd->data || !cmd->data->envp)
 	{
 		if (path)
@@ -92,6 +95,6 @@ int	ft_exec_cmd(t_cmd *cmd)
 	}
 	execve(path, cmd->argv, cmd->data->envp);
 	perror("minishell: execve");
-	free(path);
+	ft_child_cleanup(cmd, path);
 	return (EXIT_FAILURE);
 }

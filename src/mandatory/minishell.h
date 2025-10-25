@@ -270,6 +270,9 @@ void    ft_free_data(t_data *data);
 void    ft_cleanup_and_exit(t_cmd *cmd_list, pid_t *pids, t_data *data, 
                             int exit_code);
 
+// Child process cleanup
+void    ft_child_cleanup(t_cmd *cmd, char *path);
+
 // Utilities
 int					ft_is_dot_or_dotdot(const char *name);
 
