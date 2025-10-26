@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_finish_execution.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:10:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 13:56:14 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/26 18:21:22 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,4 @@ void	ft_finish_execution(pid_t *pids, int cmd_count, t_cmd *cmd_list,
 		data->last_exit_status = exit_status;
 	free(pids);
 	ft_free_cmd_list(cmd_list);
-	//cmd_list = NULL;
 }

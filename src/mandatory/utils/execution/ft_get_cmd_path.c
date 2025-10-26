@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_cmd_path.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 16:30:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 13:33:56 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/26 18:43:23 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,16 @@ static void	free_char_array(char **arr)
 		return ;
 	i = 0;
 	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
+		free(arr[i++]);
 	free(arr);
 }
 
-char	*get_cmd_path(char *cmd, char **envp)
+static char	*try_paths(char **paths, char *cmd)
 {
-	char	*temp;
-	char	**paths;
-	char	*path;
-	char	*path_env;
 	int		i;
+	char	*temp;
+	char	*path;
 
-	path_env = ft_getenv("PATH", envp);
-	if (!path_env)
-		return (NULL);
-	paths = ft_split(path_env, ':');
-	if (!paths)
-		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
@@ -57,4 +46,18 @@ char	*get_cmd_path(char *cmd, char **envp)
 	}
 	free_char_array(paths);
 	return (NULL);
+}
+
+char	*get_cmd_path(char *cmd, char **envp)
+{
+	char	*path_env;
+	char	**paths;
+
+	path_env = ft_getenv("PATH", envp);
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+	return (try_paths(paths, cmd));
 }
