@@ -166,6 +166,7 @@ $(VALGRIND_SUPP):
 v: $(LIB_NAME) $(NAME) $(VALGRIND_SUPP)
 	@echo "$(YELLOW)Running valgrind with suppression file...$(RESET)"
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--trace-children=yes --child-silent-after-fork=yes \
 		--suppressions=./$(VALGRIND_SUPP) ./$(NAME)
 
 # Debug target with LeakSanitizer
