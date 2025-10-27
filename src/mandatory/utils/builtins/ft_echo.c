@@ -15,11 +15,10 @@
 static int	ft_putarg_echo(char *arg, int flag_n, int outfd)
 {
 	int	i;
-	
+
 	(void)flag_n;
 	if (!arg)
 		return (0);
-	
 	i = 0;
 	while (arg[i])
 	{
@@ -30,7 +29,7 @@ static int	ft_putarg_echo(char *arg, int flag_n, int outfd)
 			if (ft_putchar_fd('n', outfd) == -1)
 				return (-1);
 			i += 2;
-			continue;
+			continue ;
 		}
 		if (ft_putchar_fd(arg[i], outfd) == -1)
 			return (-1);

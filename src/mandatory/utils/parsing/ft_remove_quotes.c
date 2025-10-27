@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:16:59 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/20 12:47:38 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/26 18:52:48 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../minishell.h"
+#include "../../minishell.h"
 
 static int	skip_quote(const char *str, int *i, char *quote, int *in_quote)
 {
@@ -56,13 +56,13 @@ static int	calc_unquoted_len(const char *str)
 	q = 0;
 	while (str[i])
 	{
-		if (in_q && q == '"' && str[i] == '\\' 
-			&& (str[i + 1] == '$' || str[i + 1] == '"' 
+		if (in_q && q == '"' && str[i] == '\\'
+			&& (str[i + 1] == '$' || str[i + 1] == '"'
 				|| str[i + 1] == '\\' || str[i + 1] == '`'))
 		{
 			len++;
 			i += 2;
-			continue;
+			continue ;
 		}
 		process_quote_char(str, i, &in_q, &q);
 		if (!in_q && str[i] != '\'' && str[i] != '"')
@@ -102,12 +102,12 @@ char	*ft_remove_quotes(const char *str)
 	while (str[i])
 	{
 		if (in_q && q == '"' && str[i] == '\\'
-			&& (str[i + 1] == '$' || str[i + 1] == '"' 
+			&& (str[i + 1] == '$' || str[i + 1] == '"'
 				|| str[i + 1] == '\\' || str[i + 1] == '`'))
 		{
 			res[j++] = str[i + 1];
 			i += 2;
-			continue;
+			continue ;
 		}
 		if (!skip_quote(str, &i, &q, &in_q))
 			res[j++] = str[i++];

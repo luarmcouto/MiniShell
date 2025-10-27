@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:06:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/25 20:04:57 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/26 18:33:04 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	ft_compact_argv(char **argv)
 	int	j;
 
 	if (!argv)
-		return;
+		return ;
 	i = 0;
 	j = 0;
 	while (argv[i])
@@ -80,12 +80,12 @@ int	ft_exec_cmd(t_cmd *cmd)
 	ft_compact_argv(cmd->argv);
 	if (!cmd->argv[0])
 		return (0);
-	path = ft_get_cmd_path(cmd->argv[0],cmd->data->envp);
+	path = ft_get_cmd_path(cmd->argv[0], cmd->data->envp);
 	error = ft_validate_path(path, cmd->argv[0]);
 	if (error)
 	{
-    	ft_child_cleanup(cmd, path);
-    	return (error);
+		ft_child_cleanup(cmd, path);
+		return (error);
 	}
 	if (!path || !cmd->argv || !cmd->data || !cmd->data->envp)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_check_unclosed_quotes.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 00:00:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/18 19:03:19 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/26 18:22:51 by iwietzke         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

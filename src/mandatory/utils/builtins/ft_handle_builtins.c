@@ -14,7 +14,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static int	ft_exec_builtin(t_cmd *cmd, t_data **data, t_cmd *cmd_list, pid_t *pids)
+static int	ft_exec_builtin(t_cmd *cmd, t_data **data,
+				t_cmd *cmd_list, pid_t *pids)
 {
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		return (ft_echo(*cmd));
@@ -33,7 +34,8 @@ static int	ft_exec_builtin(t_cmd *cmd, t_data **data, t_cmd *cmd_list, pid_t *pi
 	return (-1);
 }
 
-static int	ft_exec_builtin_child(t_cmd *cmd, t_data **data, t_cmd *cmd_list, pid_t *pids)
+static int	ft_exec_builtin_child(t_cmd *cmd, t_data **data,
+				t_cmd *cmd_list, pid_t *pids)
 {
 	int	status;
 

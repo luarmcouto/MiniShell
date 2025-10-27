@@ -36,7 +36,7 @@ static int	is_in_double_quotes(const char *str, int pos)
 char	*ft_process_expansion(char *result, char *argv, int *j, t_data *data)
 {
 	char	*old;
-	
+
 	if (argv[*j] != '$')
 		return (result);
 	if (*j > 0 && argv[*j - 1] == '\\' && is_in_double_quotes(argv, *j))
