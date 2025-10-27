@@ -166,7 +166,16 @@ char				ft_get_unclosed_quote_type(const char *input);
 t_cmd				*ft_parse_input(char **argv, t_data *data);
 void				ft_skip_quotes(const char *cmd, int *i);
 char				**ft_handle_env_expansion(char **argv, t_data *data);
+char				*expand_valid_var(char *result, char *var_name,
+						t_data *data);
 char				*ft_remove_quotes(const char *str);
+int					skip_quote(const char *str, int *i, char *quote,
+						int *in_quote);
+void				process_quote_char(const char *str, int i,
+						int *in_q, char *q);
+int					is_escapable(const char *str, int i, char q, int in_q);
+int					count_loop(const char *str, int *in_q, char *q);
+void				remove_loop(const char *str, char *res, int *in_q, char *q);
 int					ft_check_syntax_errors(char **argv, int argc);
 char				*ft_expand_env_var(char *result, char *argv, int *j,
 						t_data *data);

@@ -55,3 +55,18 @@ char	*ft_process_expansion(char *result, char *argv, int *j, t_data *data)
 	}
 	return (ft_expand_env_var(result, argv, j, data));
 }
+
+char	*expand_valid_var(char *result, char *var_name, t_data *data)
+{
+	char	*env_value;
+	char	*old_str;
+
+	env_value = ft_getenv(var_name, data->envp);
+	if (env_value)
+	{
+		old_str = result;
+		result = ft_strjoin(old_str, env_value);
+		free(old_str);
+	}
+	return (result);
+}

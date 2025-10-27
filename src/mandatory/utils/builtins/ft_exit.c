@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 20:11:55 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/25 18:33:24 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:16:30 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,12 @@ int	ft_exit(t_cmd *cmd, t_cmd *cmd_list, pid_t *pids, t_data *data)
 {
 	char		**args;
 	int			arg_count;
-	long long	value;
 	int			exit_code;
 
 	args = cmd->argv;
 	if (!args)
 		ft_cleanup_and_exit(cmd_list, pids, data, 0);
-	arg_count = 0;
-	while (args[arg_count])
-		arg_count++;
+	arg_count = ft_countargs(args);
 	if (arg_count == 1)
 		ft_cleanup_and_exit(cmd_list, pids, data, 0);
 	if (arg_count > 2)
@@ -115,8 +112,7 @@ int	ft_exit(t_cmd *cmd, t_cmd *cmd_list, pid_t *pids, t_data *data)
 		ft_handle_error(14, 255, NULL, NULL);
 		ft_cleanup_and_exit(cmd_list, pids, data, 255);
 	}
-	value = ft_atoll(args[1]);
-	exit_code = (int)(value % 256);
+	exit_code = (int)(ft_atoll(args[1]) % 256);
 	ft_cleanup_and_exit(cmd_list, pids, data, exit_code);
 	return (0);
 }

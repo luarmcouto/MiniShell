@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 14:56:40 by luamonteiro       #+#    #+#             */
-/*   Updated: 2025/10/06 11:08:19 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:16:14 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char				*ft_strnstr(const char *str, const char *to_find,
 						size_t len);
 int					ft_atoi(const char *str);
 void				*ft_calloc(size_t nmemb, size_t size);
+int					ft_countargs(char **args);
 size_t				ft_count_words(const char *s, char c);
 char				*ft_strdup(const char *s);
 char				*ft_substr(char const *s, unsigned int start, size_t len);

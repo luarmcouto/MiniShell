@@ -15,7 +15,7 @@ MAIN_FILES = ft_isalpha.c ft_isalnum.c ft_isascii.c ft_isdigit.c ft_isprint.c \
  ft_strdup.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_strcmp.c \
  ft_lst_add_back.c ft_lst_add_front.c ft_lstclear.c ft_lstdellone.c ft_lstiter.c \
  ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c ft_split.c ft_putstr.c ft_isspace.c \
- ft_skip_whitespace.c ft_strcpy.c
+ ft_skip_whitespace.c ft_strcpy.c ft_countargs.c
 
 FILES_SUBDIR = files/ft_close_file.c files/ft_fprintf.c files/ft_open_file_read.c \
  files/ft_open_file_write.c files/ft_print_file.c get_next_line/get_next_line.c \

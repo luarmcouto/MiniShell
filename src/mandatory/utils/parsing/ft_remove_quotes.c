@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:16:59 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/26 18:52:48 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:58:28 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int	skip_quote(const char *str, int *i, char *quote, int *in_quote)
+int	skip_quote(const char *str, int *i, char *quote, int *in_quote)
 {
 	if (!*in_quote && (str[*i] == '\'' || str[*i] == '"'))
 	{
@@ -29,7 +29,7 @@ static int	skip_quote(const char *str, int *i, char *quote, int *in_quote)
 	return (0);
 }
 
-static void	process_quote_char(const char *str, int i, int *in_q, char *q)
+void	process_quote_char(const char *str, int i, int *in_q, char *q)
 {
 	if ((!*in_q && (str[i] == '\'' || str[i] == '"')))
 	{
@@ -45,33 +45,12 @@ static void	process_quote_char(const char *str, int i, int *in_q, char *q)
 
 static int	calc_unquoted_len(const char *str)
 {
-	int		i;
 	int		in_q;
 	char	q;
-	int		len;
 
-	i = 0;
-	len = 0;
 	in_q = 0;
 	q = 0;
-	while (str[i])
-	{
-		if (in_q && q == '"' && str[i] == '\\'
-			&& (str[i + 1] == '$' || str[i + 1] == '"'
-				|| str[i + 1] == '\\' || str[i + 1] == '`'))
-		{
-			len++;
-			i += 2;
-			continue ;
-		}
-		process_quote_char(str, i, &in_q, &q);
-		if (!in_q && str[i] != '\'' && str[i] != '"')
-			len++;
-		else if (in_q && str[i] != q)
-			len++;
-		i++;
-	}
-	return (len);
+	return (count_loop(str, &in_q, &q));
 }
 
 static void	init_remove_quotes_vars(int *i, int *j, int *in_q, char *q)
@@ -95,25 +74,7 @@ char	*ft_remove_quotes(const char *str)
 	init_remove_quotes_vars(&i, &j, &in_q, &q);
 	res = malloc(calc_unquoted_len(str) + 1);
 	if (!res)
-	{
-		free(res);
 		return (NULL);
-	}
-	while (str[i])
-	{
-		if (in_q && q == '"' && str[i] == '\\'
-			&& (str[i + 1] == '$' || str[i + 1] == '"'
-				|| str[i + 1] == '\\' || str[i + 1] == '`'))
-		{
-			res[j++] = str[i + 1];
-			i += 2;
-			continue ;
-		}
-		if (!skip_quote(str, &i, &q, &in_q))
-			res[j++] = str[i++];
-		else
-			i++;
-	}
-	res[j] = '\0';
+	remove_loop(str, res, &in_q, &q);
 	return (res);
 }

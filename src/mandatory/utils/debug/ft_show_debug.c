@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:30:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/09/17 20:13:05 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/27 21:25:37 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_show_debug(char **argv, int argc, char **expanded_argv,
 	}
 	if (expanded_argv)
 	{
-		printf("\n\033[34mArgumentos después de expandir:\033[0m\n");
+		printf("\n\033[34mArgumentos depois de expandir:\033[0m\n");
 		ft_show_argv("Expanded argv", "expanded_argv", expanded_argv, argc);
 	}
 	if (cmd_list)

@@ -6,7 +6,7 @@
 /*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 21:30:00 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/06 12:47:49 by luarodri         ###   ########.fr       */
+/*   Updated: 2025/10/27 20:45:00 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ char	*ft_expand_env_var(char *result, char *argv, int *j, t_data *data)
 {
 	int		start;
 	char	*env_name;
-	char	*env_value;
 	char	*old_str;
 
 	start = *j;
@@ -61,13 +60,7 @@ char	*ft_expand_env_var(char *result, char *argv, int *j, t_data *data)
 	if (*j > start)
 	{
 		env_name = ft_substr(argv, start, *j - start);
-		env_value = ft_getenv(env_name, data->envp);
-		if (env_value)
-		{
-			old_str = result;
-			result = ft_strjoin(old_str, env_value);
-			free(old_str);
-		}
+		result = expand_valid_var(result, env_name, data);
 		free(env_name);
 		return (result);
 	}

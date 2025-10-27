@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwietzke <iwietzke@student.42.fr>          +#+  +:+       +#+        */
+/*   By: luarodri <luarodri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 20:06:20 by luarodri          #+#    #+#             */
-/*   Updated: 2025/10/26 18:33:04 by iwietzke         ###   ########.fr       */
+/*   Updated: 2025/10/27 22:16:16 by luarodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	ft_exec_cmd(t_cmd *cmd)
 	error = ft_validate_path(path, cmd->argv[0]);
 	if (error)
 	{
-		ft_child_cleanup(cmd, path);
+		ft_child_cleanup(cmd, NULL);
 		return (error);
 	}
 	if (!path || !cmd->argv || !cmd->data || !cmd->data->envp)

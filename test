@@ -1,3 +1,13 @@
+total 100
+drwxr-xr-x 3 luarodri 2024_lisboa    36 Oct 24 21:28 libs
+-rw-r--r-- 1 luarodri 2024_lisboa  9487 Oct 27 21:28 Makefile
+-rwxr-xr-x 1 luarodri 2024_lisboa 73648 Oct 27 21:29 minishell
+drwxr-xr-x 3 luarodri 2024_lisboa    23 Oct 27 21:29 objs
+-rw-r--r-- 1 luarodri 2024_lisboa  1620 Oct 27 19:28 readline.supp
+-rw-r--r-- 1 luarodri 2024_lisboa  4219 Oct 24 21:28 README.md
+drwxr-xr-x 3 luarodri 2024_lisboa    40 Oct 24 21:28 src
+-rw-r--r-- 1 luarodri 2024_lisboa     0 Oct 27 22:05 test
+-rw-r--r-- 1 luarodri 2024_lisboa  1971 Oct 27 19:28 test_script.sh
 NAME = minishell
 
 # Debug mode: make DEBUG=1 for sanitizers
